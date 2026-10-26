@@ -34,14 +34,19 @@ class Produkt(Base):
     __tablename__ = "produkte"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    beschreibung = Column(Text, nullable=True)
+    name = Column(String, nullable=False)          # Buchtitel
+    beschreibung = Column(Text, nullable=True)      # Klappentext
     preis = Column(Float, nullable=False)
     lagerbestand = Column(Integer, default=0)
-    bild_url = Column(String, nullable=True)
+    bild_url = Column(String, nullable=True)        # Buchcover
     kategorie_id = Column(Integer, ForeignKey("kategorien.id"))
 
-    # Beziehung: Ein Produkt gehört zu einer Kategorie
+    # NEU: Buch-spezifische Felder
+    autor = Column(String, nullable=True)
+    isbn = Column(String, nullable=True)
+    verlag = Column(String, nullable=True)
+    erscheinungsjahr = Column(Integer, nullable=True)
+
     kategorie = relationship("Kategorie", back_populates="produkte")
 
 

@@ -34,13 +34,19 @@ class KategorieResponse(KategorieBase):
 # ========================================
 
 class ProduktBase(BaseModel):
-    """Basis-Felder für ein Produkt"""
+    """Basis-Felder für ein Produkt (Buch)"""
     name: str
     beschreibung: Optional[str] = None
     preis: float
     lagerbestand: int = 0
     bild_url: Optional[str] = None
     kategorie_id: Optional[int] = None
+    
+    # NEU: Buch-spezifische Felder
+    autor: Optional[str] = None
+    isbn: Optional[str] = None
+    verlag: Optional[str] = None
+    erscheinungsjahr: Optional[int] = None
 
 class ProduktCreate(ProduktBase):
     """Zum Erstellen eines Produkts"""

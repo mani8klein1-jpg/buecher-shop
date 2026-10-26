@@ -517,6 +517,24 @@ def fix_bestellzeit():
     db.close()
     return {"message": "Bestellzeiten repariert!"}
 
+# ========================================
+# TEMPORÄR: MIGRATION FÜR BÜCHER-FELDER
+# ========================================
+
+@app.get("/migrate-buecher")
+def migrate_buecher():
+    from database import engine
+    from sqlalchemy import text
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("ALTER TABLE produkte ADD COLUMN IF NOT EXISTS autor VARCHAR;"))
+            conn.execute(text("ALTER TABLE produkte ADD COLUMN IF NOT EXISTS isbn VARCHAR;"))
+            conn.execute(text("ALTER TABLE produkte ADD COLUMN IF NOT EXISTS verlag VARCHAR;"))
+            conn.execute(text("ALTER TABLE produkte ADD COLUMN IF NOT EXISTS erscheinungsjahr INTEGER;"))
+            conn.commit()
+        return {"message": "Migration erfolgreich! Bücher-Felder hinzugefügt."}
+    except Exception as e:
+        return {"error": str(e)}
 
 if __name__ == "__main__":
     import uvicorn
