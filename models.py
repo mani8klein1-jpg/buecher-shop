@@ -47,6 +47,9 @@ class Produkt(Base):
     verlag = Column(String, nullable=True)
     erscheinungsjahr = Column(Integer, nullable=True)
 
+    originalpreis = Column(Float, nullable=True)
+    rabatt_prozent = Column(Integer, nullable=True)
+
     kategorie = relationship("Kategorie", back_populates="produkte")
 
 
@@ -64,6 +67,13 @@ class Benutzer(Base):
     passwort_hash = Column(String, nullable=False)
     erstellt_am = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     ist_admin = Column(Boolean, default=False)
+
+    # NEU: Rechnungsadresse
+    rechnung_vorname = Column(String, nullable=True)
+    rechnung_nachname = Column(String, nullable=True)
+    rechnung_strasse = Column(String, nullable=True)
+    rechnung_plz = Column(String, nullable=True)
+    rechnung_ort = Column(String, nullable=True)
 
 
 # ========================================
@@ -120,3 +130,16 @@ class Bestellposition(Base):
 
     # Beziehung: Eine Position gehört zu einer Bestellung
     bestellung = relationship("Bestellung", back_populates="positionen")
+
+
+class Wunschliste(Base):
+    __tablename__ = "wunschliste"
+
+    id = Column(Integer, primary_key=True, index=True)
+    benutzer_id = Column(Integer, ForeignKey("benutzer.id"))
+    produkt_id = Column(Integer, ForeignKey("produkte.id"))
+    erstellt_am = Column(DateTime, default=datetime.utcnow)
+
+    # Beziehungen für einfachen Zugriff
+    benutzer = relationship("Benutzer")
+    produkt = relationship("Produkt")    

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilfezentrum - Casa do Livro</title>
+    <!-- Hier bindest du später deine CSS-Datei ein -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Font Awesome für die Icons (kostenlos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Der Header, der auch auf deiner Hauptseite ist (Navigation) -->
+    <header>
+        <!-- Hier kommt dein bestehender Header-Code hin (Anmelden, Warenkorb etc.) -->
+    </header>
+
+    <!-- Der Hilfe-Bereich -->
+    <main class="hilfe-container">
+        
+        <!-- 1. Der Titel & Das Bild -->
+        <section class="hilfe-header">
+            <h1>Casa do Livro</h1>
+            <h2>Hilfezentrum</h2>
+            <!-- Dein Bücherregal-Bild -->
+            <img src="bilder/hilfekopie1.png" alt="Bücherregal" class="hero-image">
+        </section>
+
+        <!-- 2. Das Suchfeld -->
+        <section class="hilfe-suche">
+            <form action="/suche" method="GET">
+                <div class="such-wrapper">
+                    <input type="text" name="q" placeholder="Suchhilfe (z.B. Lieferung, Rückgabe)">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+        </section>
+
+        <!-- 3. Die Kategorien (Gitter-Layout) -->
+        <section class="hilfe-kategorien">
+            
+            <!-- Kategorie 1 -->
+            <div class="kategorie-karte">
+                <i class="fas fa-shopping-bag icon"></i>
+                <h3>Reihenfolge</h3>
+                <p>Holen Sie sich Hilfe beim Bestellen oder Rückgeben eines Artikels</p>
+            </div>
+
+            <!-- Kategorie 2 -->
+            <div class="kategorie-karte">
+                <i class="fas fa-truck icon"></i>
+                <h3>Lieferung</h3>
+                <p>Erfahren Sie mehr über unsere Lieferoptionen und -zeiten</p>
+            </div>
+
+            <!-- Kategorie 3 -->
+            <div class="kategorie-karte">
+                <i class="fas fa-credit-card icon"></i>
+                <h3>Zahlungen</h3>
+                <p>Informationen zu Zahlungsarten, Buchmarken und Geschenkkarten</p>
+            </div>
+
+            <!-- Kategorie 4 -->
+            <div class="kategorie-karte">
+                <i class="fas fa-handshake icon"></i>
+                <h3>Geschäft</h3>
+                <p>Brauchen Sie Bücher für Ihr Unternehmen oder Ihre Institution?</p>
+            </div>
+
+            <!-- Kategorie 5 -->
+            <div class="kategorie-karte">
+                <i class="fas fa-question-circle icon"></i>
+                <h3>Nützliche Informationen</h3>
+                <p>Zusätzliche Informationen, die beim Einkaufen helfen</p>
+            </div>
+
+            <!-- Kategorie 6 -->
+            <div class="kategorie-karte">
+                <i class="fas fa-file-alt icon"></i>
+                <h3>Mein Konto</h3>
+                <p>Verwalten Sie Ihre Bestellungen und Ihr Profil</p>
+            </div>
+
+            <!-- Kategorie 7 -->
+            <div class="kategorie-karte">
+                <i class="fas fa-phone-alt icon"></i>
+                <h3>Kontaktieren Sie uns</h3>
+                <p>Erhalten Sie Unterstützung bei Ihrer Anfrage</p>
+            </div>
+
+            
+            <!-- Kategorie 8 als Link -->
+            <a href="index.html" class="kategorie-karte" style="text-decoration: none; color: inherit;">
+                <i class="fas fa-arrow-left icon"></i>
+                <h3>Zurück zur Website</h3>
+                <p>Rückkehr zum Shop</p>
+            </a>
+
+        </section>
+    </main>
+
+</body>
+</html>

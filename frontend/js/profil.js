@@ -1,99 +1,72 @@
 document.addEventListener('DOMContentLoaded', async function() {
     if (!isLoggedIn()) {
-        window.location.href = 'login.html';
+        window.location.href = "login.html";
         return;
     }
 
-    await updateLoginStatus();
-    await updateCartCount();
-    await loadProfil();
-});
-
-async function loadProfil() {
     try {
+        // Benutzerdaten laden
         const benutzer = await getBenutzer();
-        const container = document.getElementById('profilInhalt');
+        const nameElement = document.getElementById('dashboardName');
+        if (nameElement) nameElement.textContent = benutzer.name;
 
-        const regDatum = new Date(benutzer.erstellt_am).toLocaleDateString('de-DE', {
-            day: '2-digit', month: '2-digit', year: 'numeric'
-        });
+        // Bestellungen laden
+        await ladeDashboardBestellungen();
 
-        container.innerHTML = `
-            <div style="background:white; padding:30px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.08);">
-                <h2 style="margin-bottom:20px;">Persönliche Daten</h2>
-                <div class="profil-daten">
-                    <p style="margin-bottom: 10px;"><strong>Name:</strong> ${benutzer.name}</p>
-                    <p style="margin-bottom: 10px;"><strong>E-Mail:</strong> ${benutzer.email}</p>
-                    <p style="margin-bottom: 10px;"><strong>Registriert am:</strong> ${regDatum}</p>
-                    <p style="margin-bottom: 10px;"><strong>Status:</strong> ${benutzer.ist_admin ? 'Administrator' : 'Kunde'}</p>
-                </div>
-                <a href="bestellungen.html" class="btn btn-primary" style="margin-top:20px; display:inline-block;">Meine Bestellungen ansehen</a>
-            </div>
-        `;
+        // Wunschliste laden
+        await ladeDashboardWunschliste();
+
     } catch (error) {
-        console.error('Fehler beim Laden des Profils:', error);
-        document.getElementById('profilInhalt').innerHTML = '<p style="color:#e94560;">Fehler beim Laden des Profils.</p>';
-    }
-}
-
-// ========================================
-// HILFSFUNKTIONEN (kopiert aus anderen JS-Dateien)
-// ========================================
-
-async function updateLoginStatus() {
-    const loginLink = document.getElementById('loginLink');
-    const userMenu = document.getElementById('userMenu');
-    const adminLink = document.getElementById('adminLink');
-    
-    if (isLoggedIn()) {
-        loginLink.style.display = 'none';
-        userMenu.style.display = 'block';
-        
-        try {
-            const benutzer = await getBenutzer();
-            document.getElementById('userNameText').textContent = benutzer.name;
-            
-            if (adminLink) {
-                adminLink.style.display = benutzer.ist_admin ? 'block' : 'none';
-            }
-        } catch (error) {
-            document.getElementById('userNameText').textContent = 'Benutzer';
-            if (adminLink) adminLink.style.display = 'none';
-        }
-    } else {
-        loginLink.style.display = 'block';
-        userMenu.style.display = 'none';
-        if (adminLink) adminLink.style.display = 'none';
-    }
-}
-
-function toggleDropdown(event) {
-    event.preventDefault();
-    const dropdown = document.getElementById('userDropdown');
-    dropdown.classList.toggle('show');
-}
-
-document.addEventListener('click', function(event) {
-    const userMenu = document.getElementById('userMenu');
-    const dropdown = document.getElementById('userDropdown');
-    if (userMenu && dropdown && !userMenu.contains(event.target)) {
-        dropdown.classList.remove('show');
+        console.error("Fehler beim Laden des Dashboards:", error);
     }
 });
 
-function logout() {
-    removeToken();
-    window.location.href = 'index.html';
+async function ladeDashboardBestellungen() {
+    const container = document.getElementById('dashboardBestellungen');
+    if (!container) return;
+
+    try {
+        const bestellungen = await getBestellungen();
+        
+        if (bestellungen.length === 0) {
+            container.innerHTML = '<p>Du hast noch keine Bestellungen.</p>';
+            return;
+        }
+
+        // Die letzten 3 Bestellungen anzeigen
+        const letzte = bestellungen.slice(0, 3);
+        let html = '<ul style="list-style: none; padding: 0;">';
+        letzte.forEach(b => {
+            const datum = new Date(b.erstellt_am).toLocaleDateString('de-DE');
+            html += `<li style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                <strong>#${b.id}</strong> - ${datum} - ${b.gesamtpreis.toFixed(2).replace('.', ',')} €
+                <span style="color: #ff9800; font-size: 12px; margin-left: 10px;">${b.status.toUpperCase()}</span>
+            </li>`;
+        });
+        html += '</ul>';
+        container.innerHTML = html;
+
+    } catch (error) {
+        console.error("Fehler beim Laden der Bestellungen:", error);
+        container.innerHTML = '<p>Fehler beim Laden der Bestellungen.</p>';
+    }
 }
 
-async function updateCartCount() {
-    if (!isLoggedIn()) return;
-    
+async function ladeDashboardWunschliste() {
+    const container = document.getElementById('dashboardWunschliste');
+    if (!container) return;
+
     try {
-        const warenkorb = await getWarenkorb();
-        const count = warenkorb.reduce((sum, item) => sum + item.menge, 0);
-        document.getElementById('cartCount').textContent = count;
+        const wunschliste = await getWunschliste();
+        const anzahl = wunschliste.length;
+        
+        if (anzahl === 0) {
+            container.textContent = "Du hast noch keine Bücher auf der Wunschliste.";
+        } else {
+            container.textContent = `Du hast ${anzahl} Buch${anzahl > 1 ? 'er' : ''} auf deiner Wunschliste.`;
+        }
     } catch (error) {
-        console.error('Fehler:', error);
+        console.error("Fehler beim Laden der Wunschliste:", error);
+        container.textContent = "Fehler beim Laden der Wunschliste.";
     }
 }

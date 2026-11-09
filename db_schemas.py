@@ -48,6 +48,9 @@ class ProduktBase(BaseModel):
     verlag: Optional[str] = None
     erscheinungsjahr: Optional[int] = None
 
+    originalpreis: Optional[float] = None
+    rabatt_prozent: Optional[int] = None
+
 class ProduktCreate(ProduktBase):
     """Zum Erstellen eines Produkts"""
     pass
@@ -156,5 +159,36 @@ class BestellungCreate(BaseModel):
     strasse: str
     plz: str
     ort: str 
-        
+
+
+class WunschlisteCreate(BaseModel):
+    produkt_id: int
+
+class WunschlisteResponse(BaseModel):
+    id: int
+    produkt_id: int
+    produkt_name: str
+    produkt_bild: str
+    produkt_preis: float
+
+    class Config:
+        from_attributes = True
+
+
+class RechnungsadresseUpdate(BaseModel):
+    rechnung_vorname: Optional[str] = None
+    rechnung_nachname: Optional[str] = None
+    rechnung_strasse: Optional[str] = None
+    rechnung_plz: Optional[str] = None
+    rechnung_ort: Optional[str] = None
+
+class RechnungsadresseResponse(BaseModel):
+    rechnung_vorname: Optional[str] = None
+    rechnung_nachname: Optional[str] = None
+    rechnung_strasse: Optional[str] = None
+    rechnung_plz: Optional[str] = None
+    rechnung_ort: Optional[str] = None
+
+    class Config:
+        from_attributes = True        
           

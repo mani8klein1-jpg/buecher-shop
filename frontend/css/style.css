@@ -1,8 +1,13 @@
 /* ========================================
-   TECHSTORE - STYLES
+   CASA DO LIVRO - KOMPLETTES STYLESHEET
    ======================================== */
 
-/* Reset */
+:root {
+    --primary-color: #1A4D46; /* Dunkelgrün */
+    --accent-color: #E09F3E;  /* Goldgelb */
+    --text-color: #333;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -12,95 +17,459 @@
 body {
     font-family: 'Roboto Condensed', sans-serif;
     background-color: #f5f5f5;
-    color: #333;
+    color: var(--text-color);
 }
 
 /* ========================================
-   HEADER
+   HEADER (NEU: PERFEKTES GRID)
    ======================================== */
 
-header {
-    background-color: #ffffff;
-    color: rgb(209, 207, 207);
-    padding: 15px 0;
+.site-header {
+    width: 100%;
+    background: #ffffff;
+    border-bottom: 2px solid var(--primary-color);
     position: sticky;
     top: 0;
     z-index: 1000;
 }
 
-.header-container {
-    max-width: 100%;
+/* Obere Leiste */
+.top-bar {
+    background: var(--primary-color);
+    color: #ffffff;
+}
+
+.top-inner {
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0 30px;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 20px;
 }
 
-.header-container nav {
-    display: contents;
+.top-links {
+    display: flex;
+    align-items: center; /* Zentriert die Elemente vertikal */
+    gap: 24px;           /* Abstand zwischen den Elementen */
 }
 
-.header-container nav ul {
+/* Sorgt dafür, dass der Auth-Bereich (Login/Registrieren/UserMenu) auch in einer Reihe ist */
+#authBereich {
     display: flex;
-    gap: 25px;
     align-items: center;
-    list-style: none;
-    justify-self: end;
+    gap: 24px;
+}
+
+/* Die Links selbst bekommen etwas Abstand zueinander 
+.top-bar a {
+    margin-right: 0;  Falls vorher einer gesetzt war, setzen wir ihn zurück 
+}*/
+
+.top-bar a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.top-bar a:hover {
+    opacity: 0.8;
+}
+
+/* Logo, Suche und Warenkorb */
+.header-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 20px;
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr) 200px;
+    align-items: center;
+    gap: 24px;
 }
 
 .logo {
+    text-decoration: none;
     display: flex;
     align-items: center;
-    text-decoration: none;
 }
 
 .logo img {
-    height: 25px;   
+    height: 80px;
     width: auto;
-    display: block;
 }
 
-nav ul {
-    list-style: none;
+/* Suchfeld */
+.search-box {
     display: flex;
-    gap: 25px;
-    align-items: center;
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    overflow: hidden;
 }
 
-nav ul li a {
-    color: #5c5b5b;
-    text-decoration: none;
+.search-box select {
+    max-width: 145px;
+    border: none;
+    border-right: 1px solid #d1d5db;
+    background: #f8f8f8;
+    padding: 0 10px;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+.search-box input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    padding: 0 12px;
     font-size: 15px;
-    transition: color 0.3s;
+    font-family: 'Roboto Condensed', sans-serif;
 }
 
-nav ul li a:hover {
-    color: rgb(130, 129, 129);
+.search-box button {
+    width: 48px;
+    border: none;
+    background: #ffffff;
+    cursor: pointer;
+    font-size: 19px;
+    /* NEU: Zentriert das Icon im Button */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.cart-icon {
-    display: inline-flex;
+.search-box button:hover {
+    background: #f0f0f0;
+}
+
+/* Warenkorb */
+/* Warenkorb */
+.cart {
+    display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 2px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    position: relative; /* Wichtig für die Positionierung der roten Zahl */
+    
+    /* Der Rahmen, wie auf deiner Zeichnung */
+    border: 1px solid #e0e0e0;
+    background-color: #ffffff;
+    padding: 8px 15px;
+    border-radius: 6px;
+    min-width: 100px;
+    height: 60px; /* Feste Höhe für eine saubere Ausrichtung */
+    box-sizing: border-box;
+    transition: border-color 0.2s;
 }
 
-.cart-count {
+.cart:hover {
+    border-color: var(--primary-color);
+}
+
+/* Das Warenkorb-Icon (Emoji) */
+.cart .cart-icon {
+    font-size: 22px;
+    line-height: 1;
+}
+
+/* Der Text "Warenkorb" */
+.cart .cart-label {
+    font-size: 12px;
+    color: #555;
+    margin-top: 2px;
+}
+
+/* Der Preis */
+.cart strong {
+    font-size: 13px;
+    color: var(--primary-color);
+}
+
+/* Die rote Zahl (Badge) */
+.cart .cart-count {
+    position: absolute;
+    top: -8px;    /* Zieht die Zahl nach oben aus dem Rahmen heraus */
+    right: -8px;  /* Zieht die Zahl nach rechts aus dem Rahmen heraus */
     background-color: #e94560;
     color: white;
     font-size: 11px;
+    font-weight: bold;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Kleiner Schatten für den 3D-Effekt */
+}
+
+.cart span:nth-child(2) {
+    font-size: 24px;
+}
+
+.cart strong {
+    font-size: 14px;
+}
+
+/* Navigation */
+.main-nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 28px;
+}
+
+.main-nav a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 15px;
     font-weight: 700;
-    padding: 2px 6px;
+}
+
+.main-nav a:hover {
+    color: var(--accent-color);
+}
+
+
+/* ========================================
+   BANNER - CASA DO LIVRO
+   ======================================== */
+
+.promo-banner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+    width: calc(100% - 40px);
+    max-width: 1160px;
+    min-height: 390px;
+    margin: 30px auto;
+    overflow: hidden;
     border-radius: 10px;
-    line-height: 1;
-    min-width: 16px;
-    text-align: center;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.promo-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px;
+    min-width: 0;
+}
+
+.promo-eyebrow {
+    color: var(--accent-color);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.promo-banner h2 {
+    color: #ffffff;
+    font-family: Georgia, serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: normal;
+    line-height: 1.15;
+    margin-bottom: 18px;
+}
+
+.promo-banner p {
+    color: #f1f5f3;
+    font-size: 17px;
+    line-height: 1.7;
+    max-width: 420px;
+    margin-bottom: 25px;
+}
+
+.promo-banner button {
+    background-color: var(--accent-color);
+    color: #183c36;
+    border: none;
+    padding: 14px 26px;
+    border-radius: 4px;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.promo-banner button:hover {
+    background-color: #f0b85f;
+    transform: translateY(-2px);
+}
+
+.promo-image {
+    min-width: 0;
+    min-height: 390px;
+    overflow: hidden;
+}
+
+.promo-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 390px;
+    object-fit: cover;
+    object-position: center;
 }
 
 /* ========================================
-   CONTAINER
+   HANDY UND TABLET
+   ======================================== */
+
+@media (max-width: 760px) {
+    .promo-banner {
+        grid-template-columns: 1fr;
+        width: calc(100% - 24px);
+        min-height: 0;
+        margin: 20px auto;
+        border-radius: 8px;
+    }
+
+    .promo-content {
+        align-items: center;
+        text-align: center;
+        padding: 30px 20px;
+    }
+
+    .promo-eyebrow {
+        font-size: 11px;
+        letter-spacing: 1px;
+    }
+
+    .promo-banner h2 {
+        font-size: 36px;
+        overflow-wrap: break-word;
+    }
+
+    .promo-banner p {
+        font-size: 16px;
+        max-width: 100%;
+    }
+
+    .promo-image {
+        width: 100%;
+        min-height: 0;
+        height: 240px;
+    }
+
+    .promo-image img {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    /* Header auf kleinen Bildschirmen */
+    .header-main {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .logo {
+        min-width: 0;
+    }
+
+    .logo img {
+        height: 90px !important;
+        max-width: 100%;
+        object-fit: contain;
+    }
+
+    .cart {
+        min-width: 85px;
+        padding: 6px 8px;
+    }
+
+    .search-box {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        width: 100%;
+    }
+
+    .search-box select {
+        max-width: 105px;
+        padding: 0 5px;
+        font-size: 12px;
+    }
+
+    .main-nav {
+        justify-content: center;
+        gap: 12px 18px;
+        padding: 10px 12px 16px;
+    }
+
+    .main-nav a {
+        font-size: 14px;
+    }
+
+    .container {
+        padding: 25px 12px;
+    }
+
+    .produkt-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dropdown-content {
+        min-width: 0;
+        width: min(90vw, 450px);
+        left: 50%;
+        padding: 12px;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+}
+
+/* Sehr schmale Handys */
+@media (max-width: 380px) {
+    .promo-content {
+        padding: 25px 14px;
+    }
+
+    .promo-banner h2 {
+        font-size: 31px;
+    }
+
+    .promo-banner p {
+        font-size: 15px;
+    }
+
+    .logo img {
+        height: 62px !important;
+    }
+
+    .cart {
+        min-width: 75px;
+    }
+
+    .cart strong {
+        font-size: 12px;
+    }
+}
+
+/* ========================================
+   CONTAINER & PRODUKT-GRID
    ======================================== */
 
 .container {
@@ -109,9 +478,10 @@ nav ul li a:hover {
     padding: 30px 20px;
 }
 
-/* ========================================
-   PRODUKT-GRID
-   ======================================== */
+.container h2 {
+    color: var(--primary-color);
+    font-size: 28px;
+}
 
 .produkt-grid {
     display: grid;
@@ -127,6 +497,8 @@ nav ul li a:hover {
     box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     transition: transform 0.3s, box-shadow 0.3s;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
 }
 
 .produkt-card:hover {
@@ -136,245 +508,51 @@ nav ul li a:hover {
 
 .produkt-card img {
     width: 100%;
-    height: 250px;
-    object-fit: cover;
+    height: 300px;
+    object-fit: contain;
     background-color: #f9f9f9;
+    padding: 10px;
 }
 
 .produkt-info {
     padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .produkt-info h3 {
     font-size: 18px;
-    margin-bottom: 8px;
-    color: #1a1a1a;
+    margin-bottom: 5px;
+    color: var(--primary-color);
+    font-weight: 700;
+    line-height: 1.3; /* Damit lange Titel schön umbrechen */
+}
+
+.produkt-info .autor {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+    font-style: italic;
 }
 
 .produkt-info .beschreibung {
     font-size: 14px;
     color: #888;
     margin-bottom: 12px;
+    flex-grow: 1;
 }
 
 .produkt-info .preis {
     font-size: 20px;
     font-weight: 700;
-    color: #e94560;
+    color: var(--primary-color);
 }
 
 .produkt-info .lager {
     font-size: 13px;
     color: #4caf50;
     margin-top: 5px;
-}
-
-/* ========================================
-   BUTTONS
-   ======================================== */
-
-.btn {
-    display: inline-block;
-    padding: 12px 24px;
-    background-color: #1a1a1a;
-    color: white;
-    text-decoration: none;
-    border: none;
-    border-radius: 4px;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.btn:hover {
-    background-color: #333;
-}
-
-.btn-primary {
-    background-color: #e94560;
-}
-
-.btn-primary:hover {
-    background-color: #c73652;
-}
-
-.btn-block {
-    width: 100%;
-    text-align: center;
-}
-
-/* ========================================
-   WARENKORB
-   ======================================== */
-
-.warenkorb-item {
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-.warenkorb-item-info h3 {
-    font-size: 17px;
-    margin-bottom: 5px;
-}
-
-.warenkorb-item-info .preis {
-    color: #e94560;
-    font-weight: 700;
-}
-
-.warenkorb-summe {
-    background: white;
-    border-radius: 8px;
-    padding: 25px;
-    margin-top: 25px;
-    text-align: right;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-.warenkorb-summe h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-.warenkorb-summe .gesamt {
-    color: #e94560;
-}
-
-/* ========================================
-   FORMULARE
-   ======================================== */
-
-.form-box {
-    max-width: 450px;
-    margin: 60px auto;
-    background: white;
-    padding: 45px;
-    border-radius: 8px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.08);
-}
-
-.form-box h1 {
-    font-size: 28px;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.form-box .subtitle {
-    text-align: center;
-    color: #888;
-    margin-bottom: 30px;
-    font-size: 15px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 6px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px 15px;
-    font-size: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    transition: border-color 0.3s;
-}
-
-.form-group input:focus {
-    outline: none;
-    border-color: #e94560;
-}
-
-/* ========================================
-   FEHLERMELDUNG
-   ======================================== */
-
-.error {
-    color: #e94560;
-    font-size: 14px;
-    margin-top: 15px;
-    text-align: center;
-}
-
-/* ========================================
-   FOOTER
-   ======================================== */
-
-footer {
-    background: #1a1a1a;
-    color: #888;
-    text-align: center;
-    padding: 25px;
-    margin-top: 60px;
-    font-size: 14px;
-}
-
-/* ========================================
-   USER-MENÜ (Dropdown)
-   ======================================== */
-
-#userName {
-    cursor: pointer;
-    color: rgb(90, 90, 91);
-    font-size: 15px;
-    transition: color 0.3s;
-    user-select: none;
-}
-
-#userName:hover {
-    color: #333;
-}
-
-.user-dropdown {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: white;
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    min-width: 200px;
-    z-index: 1001;
-    margin-top: 10px;
-    overflow: hidden;
-}
-
-.user-dropdown.show {
-    display: block;
-}
-
-.user-dropdown a {
-    display: block;
-    padding: 12px 18px;
-    color: #1a1a1a;
-    text-decoration: none;
-    font-size: 14px;
-    transition: background-color 0.2s;
-}
-
-.user-dropdown a:first-child {
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.user-dropdown a:hover {
-    background-color: #f5f5f5;
-}
-
-.user-dropdown a:last-child {
-    color: #e94560;
 }
 
 /* ========================================
@@ -406,563 +584,2446 @@ footer {
 }
 
 .filter-btn:hover {
-    border-color: #e94560;
-    color: #e94560;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
 }
 
 .filter-btn.active {
-    background: #1a1a1a;
+    background: var(--primary-color);
     color: white;
-    border-color: #1a1a1a;
+    border-color: var(--primary-color);
 }
 
 .filter-count {
-    background: #e94560;
-    color: white;
+    background: var(--accent-color);
+    color: var(--primary-color);
     font-size: 11px;
     padding: 2px 8px;
     border-radius: 10px;
     font-weight: 700;
 }
 
-.filter-btn.active .filter-count {
-    background: #e94560;
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #123632;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #c98b32;
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+
+footer {
+    background: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 25px;
+    margin-top: 60px;
+    font-size: 14px;
+}
+
+/* ========================================
+   FORMULARE (für Login/Registrieren)
+   ======================================== */
+
+.form-box {
+    max-width: 450px;
+    margin: 60px auto;
+    background: white;
+    padding: 45px;
+    border-radius: 8px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+}
+
+.form-box h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: var(--primary-color);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
 }
 
 
 /* ========================================
-   SUCHLEISTE
+   MEGA-MENÜ (Dropdown)
    ======================================== */
 
-.suchleiste {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    width: 100%;
-    max-width: 500px;
-    justify-self: center;
+.dropdown {
+    position: relative;
+    display: inline-block;
 }
 
-.suchleiste input {
-    flex: 1;
-    padding: 10px 16px;
-    font-size: 14px;
-    font-family: 'Roboto Condensed', sans-serif;
-    border: 2px solid #e0e0e0;
-    border-right: none;
-    border-radius: 4px 0 0 4px;
-    outline: none;
-    transition: border-color 0.2s;
-}
-
-.suchleiste input:focus {
-    border-color: #e94560;
-}
-
-.suchleiste button {
-    padding: 10px 20px;
-    background: #1a1a1a;
-    color: white;
-    border: 2px solid #1a1a1a;
-    border-radius: 0 4px 4px 0;
-    font-family: 'Roboto Condensed', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
+.dropbtn {
     cursor: pointer;
-    transition: background 0.2s;
-    white-space: nowrap;
 }
 
-.suchleiste button:hover {
-    background: #e94560;
-    border-color: #e94560;
+/* Der Inhalt des Dropdowns (standardmäßig versteckt) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    min-width: 450px; /* Breite des Mega-Menüs */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    z-index: 1000;
+    top: 100%; /* Direkt unter dem Button */
+    left: 50%;
+    transform: translateX(-50%); /* Zentriert das Menü unter dem Button */
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex; /* Wichtig für die Spalten */
+    gap: 30px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+/* Anzeigen beim Hover über den Dropdown-Container */
+.dropdown:hover .dropdown-content {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Die Spalten im Mega-Menü */
+.dropdown-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dropdown-column h4 {
+    color: var(--primary-color);
+    font-size: 16px;
+    margin-bottom: 5px;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 5px;
+}
+
+.dropdown-column a {
+    color: #555;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400 !important; /* Überschreibt das Fettgedruckte aus der main-nav */
+    transition: color 0.2s;
+}
+
+.dropdown-column a:hover {
+    color: var(--accent-color);
+}
+
+/* Kleiner Pfeil nach unten */
+.dropbtn::after {
+    content: " ▾";
+    font-size: 12px;
 }
 
 
 
-/* Responsive: Suchleiste auf kleinen Bildschirmen anpassen */
-@media (max-width: 900px) {
-    .suchleiste {
+
+/* ========================================
+   MOBILE HEADER MIT HAMBURGER-MENÜ
+   CASA DO LIVRO
+   ======================================== */
+
+@media (max-width: 768px) {
+
+    /* Hamburger-Menü */
+    .menu-toggle {
         display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 1002;
+        position: relative;
+    }
+
+    /* Navigation: zunächst außerhalb des Bildschirms */
+    .main-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 85%;
+        max-width: 320px;
+        height: 100vh;
+        height: 100dvh;
+        background: #ffffff;
+        z-index: 1001;
+
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+
+        padding: 80px 20px 30px;
+        overflow-y: auto;
+
+        transform: translateX(-100%);
+        visibility: hidden;
+        transition:
+            transform 0.4s ease,
+            visibility 0.4s ease;
+
+        box-shadow: none;
+    }
+
+    /* Navigation fährt von links nach rechts ein */
+    .main-nav.is-open {
+        transform: translateX(0);
+        visibility: visible;
+        box-shadow: 5px 0 20px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Navigationspunkte untereinander */
+    .main-nav > a,
+    .main-nav .dropbtn {
+        display: flex;
+        align-items: center;
         width: 100%;
-        max-width: 100%;
-        margin-top: 10px;
+        box-sizing: border-box;
+        padding: 15px 12px;
+        text-align: left;
+        text-decoration: none;
     }
-    
-    .suchleiste input {
-        flex: 1;
+
+    /* Dropdown-Container */
+    .main-nav .dropdown {
+        display: block;
+        width: 100%;
     }
-    
-    .suchleiste button {
+
+    /* Auf dem Handy keine Desktop-Hover-Menüs */
+    .main-nav .dropdown:hover .dropdown-content {
+        display: none;
+    }
+
+    /* Bücher-Untermenü: standardmäßig geschlossen */
+    .main-nav .dropdown .dropdown-content {
+        position: static;
+        display: flex;
+        flex-direction: column;
+
+        width: 100%;
+        box-sizing: border-box;
+        max-height: 0;
+        overflow: hidden;
+
+        padding: 0;
+        margin: 0;
+        border: none;
+        box-shadow: none;
+        background: #f8f8f8;
+
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(-15px);
+
+        transition:
+            max-height 0.45s ease,
+            opacity 0.35s ease,
+            transform 0.35s ease,
+            visibility 0.35s ease;
+    }
+
+    /* Nur das aktiv geöffnete Untermenü erscheint */
+    .main-nav .dropdown.open .dropdown-content {
+        display: flex;
+        max-height: 500px;
+        padding: 8px 0;
+
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+    }
+
+    /* Links innerhalb des Bücher-Untermenüs */
+    .main-nav .dropdown-content a {
+        display: block;
+        padding: 12px 20px;
+        text-decoration: none;
+    }
+
+    /* Hintergrund hinter dem geöffneten Menü */
+    .menu-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+
+        background: rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        visibility: hidden;
+
+        transition:
+            opacity 0.3s ease,
+            visibility 0.3s ease;
+    }
+
+    .main-nav.is-open ~ .menu-overlay {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+
+
+/* ========================================
+   KORREKTUR: HAMBURGER UND WARENKORB
+   ======================================== */
+
+@media (max-width: 768px) {
+
+    /* Hamburger-Symbol: kompakt und ohne grauen Hintergrund */
+    #menuToggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 44px;
+        min-width: 44px;
+        height: 44px;
+        padding: 0;
+        margin: 0;
+
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+
+        color: inherit;
+        font-size: 26px;
+        line-height: 1;
+
+        flex: 0 0 44px;
+    }
+
+    #menuToggle:hover,
+    #menuToggle:focus,
+    #menuToggle:active {
+        background: transparent;
+        box-shadow: none;
+    }
+
+    /* Warenkorb nicht über die ganze Breite ziehen */
+    #cartLink,
+    .cart-link,
+    .warenkorb-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        width: auto;
+        min-width: 44px;
+        max-width: max-content;
+
+        padding: 8px;
+        margin: 0;
+
+        flex: 0 0 auto;
         white-space: nowrap;
     }
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .kategorie-filter {
-        gap: 8px;
-    }
-    
-    .filter-btn {
-        padding: 8px 14px;
-        font-size: 13px;
-    }
-}
+
 
 /* ========================================
-   MOBILE ANSICHT (Handy)
+   KORREKTUR: HAMBURGER UND WARENKORB
    ======================================== */
 
 @media (max-width: 768px) {
-    /* Header: Grid auf 1 Spalte umstellen */
-    .header-container {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding: 10px 15px;
+
+    /* Hamburger-Symbol: kompakt und ohne grauen Hintergrund */
+    #menuToggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 44px;
+        min-width: 44px;
+        height: 44px;
+        padding: 0;
+        margin: 0;
+
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+
+        color: inherit;
+        font-size: 26px;
+        line-height: 1;
+
+        flex: 0 0 44px;
     }
 
-    /* Logo mittig */
-    .logo {
+    #menuToggle:hover,
+    #menuToggle:focus,
+    #menuToggle:active {
+        background: transparent;
+        box-shadow: none;
+    }
+
+    /* Warenkorb nicht über die ganze Breite ziehen */
+    #cartLink,
+    .cart-link,
+    .warenkorb-link {
+        display: inline-flex;
+        align-items: center;
         justify-content: center;
+
+        width: auto;
+        min-width: 44px;
+        max-width: max-content;
+
+        padding: 8px;
+        margin: 0;
+
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+}
+
+
+
+/* ========================================
+   CASA DO LIVRO – MOBILER HEADER
+   Hamburger | Logo | Warenkorb
+   Suchfeld darunter
+   ======================================== */
+
+@media (max-width: 768px) {
+
+    /* Header-Elemente dürfen nicht ungewollt umbrechen */
+    header {
+        position: relative;
+    }
+
+    /* Gemeinsame Zeile für Hamburger, Logo und Warenkorb */
+    header .header-top,
+    header .header-main,
+    header .header-container,
+    header .header-content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+    /* Hamburger links */
+    #menuToggle {
+        flex: 0 0 44px;
+        width: 44px;
+        min-width: 44px;
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        border: none;
+    }
+
+    /* Logo in der Mitte */
+    header .logo,
+    header .site-logo,
+    header .logo-container {
+        flex: 1 1 auto;
+        min-width: 0;
+        text-align: center;
+    }
+
+    header .logo img,
+    header .site-logo img,
+    header .logo-container img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Warenkorb rechts */
+    #cartLink,
+    header .cart-link,
+    header .warenkorb-link,
+    header a[href*="warenkorb"] {
+        flex: 0 0 auto;
+        width: auto;
+        min-width: 44px;
+        max-width: max-content;
+        margin-left: auto;
+        white-space: nowrap;
+    }
+
+    /* Suchfeld unter der oberen Zeile */
+    header input[type="search"],
+    header #suchInput {
+        box-sizing: border-box;
+        max-width: 100%;
+    }
+}
+
+
+
+/* ========================================
+   CASA DO LIVRO – MOBILER HEADER FIX
+   ======================================== */
+
+@media (max-width: 768px) {
+
+    /* Oberer Header-Bereich */
+    .site-header .header-main {
+        display: grid !important;
+        grid-template-columns: 44px minmax(0, 1fr) auto;
+        grid-template-rows: auto auto;
+        align-items: center;
+        column-gap: 8px;
+        row-gap: 12px;
+        padding: 12px;
+        box-sizing: border-box;
         width: 100%;
     }
 
-    /* Navigation mittig */
-    .header-container nav {
+    /* Hamburger links oben */
+    .site-header .header-main #menuToggle {
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: start;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 44px;
+        min-width: 44px;
+        height: 44px;
+        padding: 0;
+        margin: 0;
+
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+
+        font-size: 26px;
+        line-height: 1;
+        flex: none;
+    }
+
+    /* Logo mittig oben */
+    .site-header .header-main .logo {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: center;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: auto;
+        min-width: 0;
+        max-width: 100%;
+        margin: 0;
+    }
+
+    .site-header .header-main .logo img {
+        display: block;
+        width: auto;
+        height: auto !important;
+        max-width: 100%;
+        max-height: 64px;
+        object-fit: contain;
+    }
+
+    /* Warenkorb rechts oben */
+    .site-header .header-main .cart {
+        grid-column: 3;
+        grid-row: 1;
+        justify-self: end;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+
+        width: auto;
+        min-width: 0;
+        max-width: 100%;
+        padding: 4px;
+        margin: 0;
+
+        white-space: nowrap;
+        flex: none;
+    }
+
+    /* Warenkorb kompakt halten */
+    /* Warenkorb-Text ausblenden, Preis aber anzeigen */
+.site-header .header-main .cart-label {
+    display: none;
+}
+
+.site-header .header-main .cart strong {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--primary-color);
+    white-space: nowrap;
+}
+
+    .site-header .header-main .cart-icon {
+        font-size: 25px;
+    }
+
+    .site-header .header-main .cart-count {
+        font-size: 12px;
+    }
+
+    /* Suchfeld über die gesamte zweite Zeile */
+    .site-header .header-main .search-box {
+        grid-column: 1 / -1;
+        grid-row: 2;
+
+        display: flex;
+        align-items: center;
+
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    .site-header .header-main .search-box select {
+        max-width: 105px;
+        min-width: 0;
+    }
+
+    .site-header .header-main .search-box input {
+        flex: 1 1 auto;
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .site-header .header-main .search-box button {
+        flex: 0 0 auto;
+    }
+}
+
+
+@media (max-width: 768px) {
+    #closeMenuBtn {
+        display: flex !important;
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        left: auto;
+        width: 44px;
+        height: 44px;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        font-size: 26px;
+        cursor: pointer;
+        z-index: 1003;
+    }
+}
+
+
+/* Hamburger im geöffneten Menü ausblenden */
+@media (max-width: 768px) {
+    #menuToggle[aria-expanded="true"] {
+        visibility: hidden;
+    }
+}
+
+
+
+/* ========================================
+   CASA DO LIVRO – DESKTOP HEADER REPARATUR
+   ======================================== */
+
+@media (min-width: 769px) {
+
+    /* Hamburger und mobiler Schließen-Button ausblenden */
+    .site-header #menuToggle,
+    .site-header #closeMenuBtn {
+        display: none !important;
+    }
+
+    /* Drei Spalten: Logo | Suchfeld | Warenkorb */
+    .site-header .header-main {
+        display: grid !important;
+        grid-template-columns: 200px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 24px;
+
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    /* Logo links */
+    .site-header .header-main .logo {
+        grid-column: 1;
+        justify-self: start;
+        min-width: 0;
+    }
+
+    .site-header .header-main .logo img {
+    display: block;
+    width: auto;
+    height: 120px !important;
+    max-width: 240px;
+    object-fit: contain;
+}
+    
+    /* Suchfeld mittig zwischen Logo und Warenkorb */
+    
+.site-header .header-main .search-box {
+    grid-column: 2;
+    justify-self: center;
+
+    width: 100%;
+    max-width: 800px;
+    min-width: 0;
+    margin: 0;
+
+    transform: translateX(0);
+}
+
+
+
+    /* Warenkorb rechts */
+    .site-header .header-main .cart {
+        grid-column: 3;
+        justify-self: end;
+        position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 100%;
-        gap: 10px;
-    }
-
-    
-    /* Navigation in einer Reihe */
-    .header-container nav ul {
-        display: flex;
-        flex-wrap: wrap;
         justify-content: center;
-        gap: 15px;
-        padding: 0;
+
         width: 100%;
-        justify-self: center;
+        max-width: 200px;
+        min-width: 0;
+        height: 60px;
+        margin: 0;
     }
 
-    /* Container padding */
-    .container {
-        padding: 15px 10px;
+    /* Desktop-Navigation normal darstellen */
+    .site-header .main-nav {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        visibility: visible;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        width: 100%;
+        max-width: 1200px;
+        height: auto;
+        margin: 0 auto;
+        padding: 0 20px 18px;
+        overflow: visible;
+        box-shadow: none;
+    }
+}
+
+
+/* ========================================
+   CASA DO LIVRO – MOBILES SUCHFELD FIX
+   Dropdown vollständig sichtbar machen
+   ======================================== */
+
+@media (max-width: 768px) {
+
+    /* Suchfeld über die gesamte zweite Zeile */
+    .site-header .header-main .search-box {
+        grid-column: 1 / -1;
+        grid-row: 2;
+
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        height: 42px;
+
+        display: flex;
+        overflow: hidden;
     }
 
-    /* Produkte in einer Spalte */
-    .produkt-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
+    /* Dropdown "Alle Bücher" schmaler machen */
+    .site-header .header-main .search-box select {
+        flex: 0 0 100px;
+        width: 100px;
+        min-width: 0;
+        max-width: 100px;
+
+        padding: 0 4px;
+        font-size: 12px;
+        text-overflow: clip;
     }
 
-    .produkt-card img {
-        height: 200px;
-    }
+    /* Eingabefeld bekommt den restlichen Platz */
+    .site-header .header-main .search-box input {
+        flex: 1 1 0;
+        width: 0;
+        min-width: 0;
 
-    /* Produktdetail */
-    #produktDetail > div {
-        padding: 20px 15px !important;
-        gap: 20px !important;
-    }
-
-    /* Warenkorb-Items */
-    .warenkorb-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    /* Buttons */
-    .btn {
-        padding: 10px 15px;
+        padding: 0 8px;
         font-size: 14px;
+    }
+
+    /* Suchbutton bleibt vollständig sichtbar */
+    .site-header .header-main .search-box button {
+        flex: 0 0 40px;
+        width: 40px;
+        min-width: 40px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
 
 /* ========================================
-   PRODUKT-DETAILSEITE
+   CASA DO LIVRO – MOBILER WARENKORB
+   Symbol und Gesamtpreis nebeneinander
    ======================================== */
 
-.produkt-detail-wrapper {
+@media (max-width: 768px) {
+
+    
+.site-header .header-main .cart {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    gap: 4px;
+    min-width: 0;
+    width: auto;
+    max-width: 100%;
+    padding: 6px 8px;
+}
+
+
+    /* Warenkorb-Symbol */
+    
+.site-header .header-main .cart .cart-icon {
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.site-header .header-main .cart strong {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+
+    /* Text "Warenkorb" weiterhin ausblenden */
+    .site-header .header-main .cart .cart-label {
+        display: none;
+    }
+
+    /* Artikelanzahl als rote Zahl */
+    .site-header .header-main .cart .cart-count {
+        top: -7px;
+        right: -7px;
+    }
+}
+
+/* Auf sehr schmalen Handys etwas kompakter */
+@media (max-width: 380px) {
+
+    .site-header .header-main .cart {
+        gap: 5px;
+        padding: 4px;
+    }
+
+    .site-header .header-main .cart strong {
+        font-size: 15px;
+    }
+
+    .site-header .header-main .cart .cart-icon {
+        font-size: 24px;
+    }
+}
+
+/* CASA DO LIVRO – Logo auf dem Handy vergrößern */
+@media (max-width: 768px) {
+    .site-header .header-main .logo img {
+        max-height: 90px !important;
+        width: auto !important;
+        max-width: 100% !important;
+        object-fit: contain;
+    }
+
+    .site-header .header-main .logo {
+        justify-self: center;
+        min-width: 0;
+    }
+}
+
+
+/* ========================================
+   CASA DO LIVRO – BUCH-MENÜSYMBOL
+   ======================================== */
+
+
+/* CASA DO LIVRO – grüne Bücher als Menüsymbol */
+
+.menu-toggle .book-menu-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    width: 38px;
+    height: 40px;
+}
+
+.menu-toggle .book {
+    display: block;
+    width: 34px;
+    box-sizing: border-box;
+    position: relative;
+    background: #1A4D46;
+    border: 2px solid #1A4D46;
+    border-radius: 3px 3px 3px 3px;
+}
+
+/* Oben: dickstes Buch */
+.menu-toggle .book-one {
+    height: 11px;
+}
+
+/* Mitte: etwas dünner */
+.menu-toggle .book-two {
+    height: 8px;
+}
+
+/* Unten: dünnstes Buch */
+.menu-toggle .book-three {
+    height: 5px;
+}
+
+/* Nur die rechte Kante nach innen wölben */
+.menu-toggle .book {
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        94% 25%,
+        94% 75%,
+        100% 100%,
+        0 100%
+    );
+}
+
+/* Dezente Buchkante links */
+.menu-toggle .book::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    bottom: 1px;
+    width: 2px;
+    background: #E09F3E;
+    border-radius: 2px;
+}
+
+
+/* ========================================
+   CASA DO LIVRO – WARENKORB AM PC
+   Symbol links, Text und Preis rechts
+   ======================================== */
+
+@media (min-width: 769px) {
+
+   
+.site-header .header-main .cart {
+    display: grid;
+    grid-template-columns: 42px auto;
+    grid-template-rows: auto auto;
+    align-items: center;
+    justify-content: center;
+    column-gap: 5px;
+    row-gap: 2px;
+
+    min-width: 0;
+    width: fit-content;
+    height: 65px;
+    padding: 10px 10px;
+    box-sizing: border-box;
+}
+
+
+    
+
+    /* Großes Warenkorb-Symbol links */
+    .site-header .header-main .cart .cart-icon {
+        grid-column: 1;
+        grid-row: 1 / 3;
+        font-size: 38px;
+        line-height: 1;
+        justify-self: center;
+        align-self: center;
+    }
+
+    /* Text rechts oben */
+    .site-header .header-main .cart .cart-label {
+        grid-column: 2;
+        grid-row: 1;
+        display: block;
+        margin: 0;
+        font-size: 13px;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    /* Gesamtpreis rechts unten */
+    .site-header .header-main .cart strong {
+        grid-column: 2;
+        grid-row: 2;
+        display: block;
+        font-size: 15px;
+        text-align: center;
+        white-space: nowrap;
+    }
+}
+
+
+
+/* Casa do Livro – grünes Taschensymbol */
+@media (min-width: 769px) {
+    .site-header .header-main .cart .cart-icon {
+        width: 50px;
+        height: 50px;
+        display: block;
+        flex-shrink: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .site-header .header-main .cart .cart-icon {
+        width: 40px;
+        height: 40px;
+        display: block;
+        flex-shrink: 0;
+    }
+}
+
+
+
+/* Rahmen um Warenkorb-Text und Gesamtpreis */
+
+
+/* Text Warenkorb innerhalb des Rahmens */
+.site-header .header-main .cart .cart-info .cart-label {
+    display: block;
+    margin: 0;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Gesamtpreis innerhalb des Rahmens */
+.site-header .header-main .cart .cart-info strong {
+    display: block;
+    margin: 0;
+    text-align: center;
+    white-space: nowrap;
+}
+
+
+/* ========================================
+   PRODUKTKARTE: PREIS & WARENKORB-BUTTON
+   ======================================== */
+
+.preis-zeile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto; /* Drückt die Zeile nach unten */
+    padding-top: 10px;
+}
+
+.preis-zeile .preis {
+    margin: 0; /* Entfernt den Standard-Abstand */
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.add-to-cart-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.add-to-cart-btn:hover {
+    background-color: #123632;
+    transform: scale(1.05);
+}
+
+/* ========================================
+   SHOP-INTRO (Überschrift & Untertitel)
+   ======================================== */
+
+
+
+.shop-intro {
+    scroll-margin-top: 185px; /* Genau die Höhe deines Headers am PC */
+    text-align: left;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+}
+
+.shop-intro h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800; /* ExtraBold */
+    font-size: 32px;
+    color: var(--primary-color);
+    margin-bottom: 5px; /* Kleiner Abstand zur Unterzeile */
+    line-height: 1.2;
+}
+
+.shop-intro p {
+    font-family: 'Roboto Condensed', sans-serif; /* Der Untertitel bleibt bei Roboto */
+    font-size: 18px;
+    color: #888;
+    margin: 0;
+}
+
+/* ========================================
+   REGISTRIERUNG - ZWEISPALTIGES LAYOUT
+   ======================================== */
+
+.registrieren-layout {
     display: flex;
     gap: 40px;
-    background: white;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    align-items: flex-start;
     flex-wrap: wrap;
 }
 
-.produkt-detail-bild {
+/* Linke Spalte: Info-Kasten */
+.registrieren-info-box {
+    flex: 0 0 300px;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    padding: 25px;
+    border-radius: 6px;
+}
+
+.registrieren-info-box h3 {
+    font-size: 18px;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 700;
+}
+
+.registrieren-info-box ul {
+    list-style: none;
+    padding: 0;
+}
+
+.registrieren-info-box ul li {
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* Kleine Häkchen-Icons vor den Listenpunkten */
+.registrieren-info-box ul li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+/* Rechte Spalte: Formular */
+.registrieren-formular {
     flex: 1;
     min-width: 300px;
 }
 
+.registrieren-formular h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 20px;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 700;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+/* Mobile Ansicht: Untereinander */
+@media (max-width: 768px) {
+    .registrieren-layout {
+        flex-direction: column;
+    }
+    
+    .registrieren-info-box {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+
+/* ========================================
+   BENUTZER-MENÜ (TOPBAR)
+   ======================================== */
+
+.user-dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+#userName {
+    cursor: pointer;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.user-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0; 
+    background-color: #ffffff;
+    min-width: 200px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 6px;
+    z-index: 1005;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.user-dropdown.show {
+    display: block;
+}
+
+.user-dropdown a {
+    display: block;
+    padding: 12px 18px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.user-dropdown a:hover {
+    background-color: #f5f5f5;
+}
+
+.user-dropdown a:last-child {
+    color: #d32f2f;
+}
+
+/* ========================================
+   PROFIL-LAYOUT
+   ======================================== */
+
+.profil-layout {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+/* Linke Spalte: Menü */
+.profil-sidebar {
+    flex: 0 0 250px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.profil-sidebar h3 {
+    font-size: 16px;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.profil-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.profil-sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.profil-sidebar ul li a {
+    text-decoration: none;
+    color: #555;
+    font-size: 15px;
+    display: block;
+    padding: 8px 10px;
+    border-radius: 4px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.profil-sidebar ul li a:hover,
+.profil-sidebar ul li a.active {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
+
+/* Rechte Spalte: Inhalt */
+.profil-content {
+    flex: 1;
+    min-width: 300px;
+}
+
+.profil-content h2 {
+    font-family: 'Georgia', serif;
+    font-size: 32px;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.welcome-text {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.profil-box {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
+}
+
+.profil-box h3 {
+    font-size: 20px;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.profil-box p {
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: #444;
+}
+
+/* Mobile Ansicht */
+@media (max-width: 768px) {
+    .profil-layout {
+        flex-direction: column;
+    }
+    .profil-sidebar {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+}
+
+/* ========================================
+   PRODUKT-DETAILSEITE (Blackwell's Style)
+   ======================================== */
+
+.produkt-detail-wrapper {
+    display: flex;
+    gap: 50px;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.produkt-detail-bild {
+    flex: 0 0 350px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
 .produkt-detail-bild img {
     width: 100%;
-    border-radius: 8px;
+    max-width: 350px;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .produkt-detail-info {
     flex: 1;
     min-width: 300px;
+    display: flex;
+    flex-direction: column;
 }
 
 .produkt-detail-info h1 {
-    font-size: 32px;
-    margin-bottom: 10px;
+    font-family: 'Georgia', serif;
+    font-size: 28px;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+    line-height: 1.3;
+}
+
+.produkt-detail-info .autor {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.buch-details {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.buch-details p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
 }
 
 .produkt-detail-info .beschreibung {
-    color: #888;
-    margin-bottom: 20px;
-}
-
-.produkt-detail-info .preis {
-    font-size: 32px;
-    font-weight: 700;
-    color: #e94560;
-    margin-bottom: 20px;
-}
-
-.produkt-detail-info .lager {
-    color: #4caf50;
+    font-size: 15px;
+    color: #444;
+    line-height: 1.6;
     margin-bottom: 25px;
 }
 
-.mengen-selector {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 20px;
+.produkt-detail-info .preis {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 15px;
 }
 
-.mengen-selector #menge {
-    font-size: 20px;
-    font-weight: 700;
-    min-width: 40px;
-    text-align: center;
+.liefer-info {
+    margin-bottom: 25px;
+    font-size: 14px;
+    color: #2e7d32;
+    font-weight: bold;
 }
+
+.liefer-info p {
+    margin-bottom: 5px;
+}
+
 
 /* ========================================
-   MOBILE: PRODUKT-DETAILSEITE
+   AKTIONS-BUTTONS (Produkt-Detailseite)
+   ======================================== */
+/* ========================================
+   AKTIONS-BUTTONS (Produkt-Detailseite)
    ======================================== */
 
+.action-buttons {
+    display: flex;
+    flex-direction: column; /* Untereinander (parallel) */
+    gap: 10px;
+    align-items: center; /* Zentriert die Buttons horizontal */
+    margin-top: 20px;
+    width: 100%;
+}
+
+.action-buttons .btn {
+    width: 100%; /* Nimmt die volle Breite des Containers ein */
+    max-width: 280px; /* Begrenzt die Breite, damit sie in den weißen Kasten passen */
+    padding: 12px 20px;
+    font-size: 15px;
+    text-align: center;
+    box-sizing: border-box; /* Verhindert, dass Padding die Breite vergrößert */
+}
+
+/* Mobile Ansicht */
+@media (max-width: 768px) {
+    .action-buttons {
+        padding: 0 15px; /* Etwas Abstand zum Rand */
+    }
+    .action-buttons .btn {
+        max-width: 100%; /* Auf dem Handy volle Breite (innerhalb des Containers) */
+        font-size: 14px;
+        padding: 12px 10px;
+    }
+}
+
+
+/* Mobile Ansicht */
 @media (max-width: 768px) {
     .produkt-detail-wrapper {
         flex-direction: column;
-        padding: 20px 15px;
-        gap: 20px;
+        padding: 20px;
     }
-
+    
     .produkt-detail-bild {
-        min-width: 100%;
-    }
-
-    .produkt-detail-info {
-        min-width: 100%;
+        flex: 1 1 auto;
+        width: 100%;
     }
 
     .produkt-detail-info h1 {
-        font-size: 24px; /* Kleiner auf dem Handy */
-    }
-
-    .produkt-detail-info .preis {
-        font-size: 26px;
-    }
-
-    .mengen-selector {
-        justify-content: center;
+        font-size: 24px;
     }
 }
 
 /* ========================================
-   HAMBURGER-MENÜ (Mobile)
+   WARENKORB-LAYOUT
    ======================================== */
 
-/* Standardmäßig (Desktop) verstecken */
-.mobile-menu-btn,
-.close-menu-btn {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 26px;
-    cursor: pointer;
-    color: #333;
-}
-
-/* Auf dem Handy anzeigen */
-@media (max-width: 768px) {
-    .mobile-menu-btn {
-        display: block;
-        position: absolute;
-        left: 15px;
-        top: 15px;
-    }
-
-    .logo {
-        margin: 0 auto;
-    }
-
-    /* Das Menü wird zur Schublade */
-    .header-container nav {
-        position: fixed;
-        top: 0;
-        left: -100%; /* Versteckt links außerhalb des Bildschirms */
-        width: 75%;
-        height: 100vh;
-        background: white;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 60px 20px 20px 20px;
-        box-shadow: 2px 0 10px rgba(0,0,0,0.2);
-        transition: left 0.3s ease;
-        z-index: 2000;
-    }
-
-    /* Wenn das Menü offen ist */
-    .header-container nav.open {
-        left: 0;
-    }
-
-        /* Schließen-Button: Standardmäßig versteckt */
-    .close-menu-btn {
-        display: none;
-        background: none;
-        border: none;
-        font-size: 26px;
-        cursor: pointer;
-        color: #333;
-        padding: 0;
-        margin-bottom: 20px; /* Abstand zu den Links darunter */
-        align-self: flex-start; /* Ganz nach links ausrichten */
-    }
-
-    /* Wenn das Menü offen ist, zeige das X */
-    .header-container nav.open .close-menu-btn {
-        display: block;
-    }
-
-    /* Navigationsliste untereinander */
-    .header-container nav ul {
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-        gap: 20px;
-    }
-
-    .header-container nav ul li {
-        width: 100%;
-    }
-
-    .header-container nav ul li a {
-        font-size: 18px;
-        display: block;
-        padding: 10px 0;
-        border-bottom: 1px solid #eee;
-    }
-}
-
-
-/* ========================================
-   ADMIN-BEREICH (Produktliste)
-   ======================================== */
-
-.admin-produkt {
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 15px;
+.warenkorb-layout {
     display: flex;
-    align-items: center;
-    gap: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    gap: 40px;
+    align-items: flex-start;
+    flex-wrap: wrap;
 }
 
-.admin-produkt-img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 6px;
-    background: #f9f9f9;
-}
-
-.admin-produkt-info {
+.warenkorb-tabelle {
     flex: 1;
+    min-width: 300px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
-.admin-produkt-info h3 {
-    font-size: 18px;
-    margin-bottom: 5px;
+.warenkorb-tabelle table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.admin-produkt-beschreibung {
+.warenkorb-tabelle th {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 2px solid #eee;
     color: #888;
     font-size: 14px;
-    margin-bottom: 5px;
+    font-weight: 700;
 }
 
-.admin-produkt-details {
+.warenkorb-tabelle td {
+    padding: 15px 10px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.mengen-control {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.mengen-control button {
+    background: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.warenkorb-summe {
+    flex: 0 0 300px;
+    background: #f9f9f9;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.warenkorb-summe h3 {
+    font-size: 20px;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+}
+
+.summe-zeile {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: #555;
+}
+
+.summe-zeile.gesamt {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-top: 10px;
+}
+
+/* ========================================
+   WARENKORB - MOBILE ANSICHT
+   ======================================== */
+
+@media (max-width: 768px) {
+    .warenkorb-layout {
+        flex-direction: column;
+    }
+
+    .warenkorb-summe {
+        flex: 1 1 auto;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    /* Tabelle für Handy umbauen */
+    .warenkorb-tabelle {
+        padding: 10px;
+        overflow-x: auto; /* Erlaubt seitliches Scrollen, falls nötig */
+    }
+
+    .warenkorb-tabelle table,
+    .warenkorb-tabelle thead,
+    .warenkorb-tabelle tbody,
+    .warenkorb-tabelle th,
+    .warenkorb-tabelle td,
+    .warenkorb-tabelle tr {
+        display: block; /* Alles untereinander */
+    }
+
+    /* Header der Tabelle auf Handy ausblenden */
+    .warenkorb-tabelle thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .warenkorb-tabelle tr {
+        border-bottom: 2px solid #eee;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+    }
+
+    .warenkorb-tabelle td {
+        border: none;
+        position: relative;
+        padding-left: 0;
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Das Bild und der Titel sollen oben stehen */
+    .warenkorb-tabelle td:first-child {
+        display: block;
+        padding-bottom: 15px;
+    }
+
+    .warenkorb-tabelle td:first-child div {
+        flex-direction: row !important;
+    }
+
+    /* Einzelpreis auf Handy ausblenden (da er in der Summe steckt) */
+    .warenkorb-tabelle td:nth-child(3) {
+        display: none;
+    }
+
+    /* Menge und Gesamtpreis nebeneinander */
+    .warenkorb-tabelle td:nth-child(2),
+    .warenkorb-tabelle td:nth-child(4) {
+        display: inline-flex;
+        width: 50%;
+        justify-content: flex-start;
+        gap: 10px;
+    }
+
+    /* Den Mülleimer nach rechts schieben */
+    .warenkorb-tabelle td:last-child {
+        display: flex;
+        justify-content: flex-end;
+        padding-bottom: 0;
+    }
+
+    .mengen-control button {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+/* ========================================
+   CHECKOUT-LAYOUT
+   ======================================== */
+
+.checkout-layout {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.checkout-form {
+    flex: 1;
+    min-width: 300px;
+}
+
+.checkout-summary {
+    flex: 0 0 350px;
+    background: #f9f9f9;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.checkout-summary h3 {
+    font-size: 20px;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+}
+
+#checkoutItems .item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
     font-size: 14px;
     color: #555;
 }
 
+.checkout-summary .summe-zeile.gesamt {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-top: 15px;
+}
+
+/* Mobile Ansicht */
+@media (max-width: 768px) {
+    .checkout-layout {
+        flex-direction: column;
+    }
+    .checkout-summary {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+}
+
+/* ========================================
+   BESTELLUNGEN (Karten)
+   ======================================== */
+
+.bestellung-card {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+    overflow: hidden;
+}
+
+.bestellung-header {
+    background-color: #f9f9f9;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+}
+
+.bestellung-header h3 {
+    font-size: 18px;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.bestellung-datum {
+    font-size: 13px;
+    color: #888;
+}
+
+.bestellung-status {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+}
+
+.status-offen { background-color: #ff9800; }
+.status-versandt { background-color: #2196f3; }
+.status-abgeschlossen { background-color: #4caf50; }
+
+.bestellung-body {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.bestellung-positionen {
+    flex: 1;
+    font-size: 14px;
+    color: #555;
+}
+
+.bestellung-positionen strong {
+    display: block;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.bestell-position {
+    display: flex;
+    justify-content: space-between;
+    max-width: 400px;
+    margin-bottom: 5px;
+}
+@media (max-width: 768px) {
+    .bestell-position {
+        flex-direction: column;
+        gap: 2px;
+    }
+}
+
+.bestellung-gesamt {
+    font-size: 18px;
+    color: var(--primary-color);
+}
+
+.bestellung-gesamt strong {
+    font-size: 22px;
+    margin-left: 10px;
+}
+
+/* Mobile Ansicht */
+@media (max-width: 768px) {
+    .bestellung-body {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .bestellung-gesamt {
+        margin-top: 15px;
+        align-self: flex-end;
+    }
+}
+
+/* ========================================
+   MINI-WARENKORB (Dropdown unter dem Warenkorb)
+   ======================================== */
+
+.mini-cart-info {
+    position: fixed; /* NEU: Fixed, damit sie immer am Warenkorb klebt */
+    top: 100px;      /* NEU: Etwas unter dem Header */
+    right: -400px;   /* Startet außerhalb des Bildschirms */
+    width: 300px;
+    background: #ffffff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    z-index: 1001;
+    border: 1px solid #eee;
+    
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(0); /* Keine vertikale Bewegung mehr */
+    transition: right 0.4s ease-in-out, opacity 0.4s ease; /* Animation von rechts */
+}
+
+/* Wenn die Box offen ist, fährt sie von rechts herein */
+.mini-cart-info.show {
+    right: 20px; /* Fährt auf den Bildschirm */
+    opacity: 1;
+    visibility: visible;
+}
+
+.mini-cart-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    background-color: #f9f9f9;
+    border-radius: 8px 8px 0 0;
+}
+
+.mini-cart-header h3 {
+    font-size: 16px;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.mini-cart-body {
+    padding: 20px;
+    text-align: center;
+    font-size: 15px;
+    color: #555;
+}
+
+/* ========================================
+   ADMIN-BEREICH (RASTER-LAYOUT)
+   ======================================== */
+
+#adminProduktListe {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 Spalten */
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.admin-produkt {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid #eee;
+}
+
+.admin-produkt-img {
+    width: 100%;
+    height: 150px; /* Feste Höhe für alle Bilder */
+    object-fit: contain; /* Bilder werden nicht verzerrt */
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+.admin-produkt-info {
+    flex: 1;
+    width: 100%;
+}
+
+.admin-produkt-info h3 {
+    font-size: 15px;
+    margin-bottom: 5px;
+    color: var(--primary-color);
+    font-weight: 700;
+    line-height: 1.2;
+    /* Verhindert, dass zu lange Titel das Layout sprengen */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.admin-produkt-beschreibung {
+    color: #888;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.admin-produkt-details {
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
 .admin-produkt-details strong {
-    color: #e94560;
+    color: var(--primary-color);
+    font-size: 14px;
 }
 
 .admin-produkt-actions {
     display: flex;
-    gap: 8px;
+    gap: 5px;
+    width: 100%;
+    margin-top: auto;
 }
 
-/* Mobile Anpassung */
+.admin-produkt-actions .btn {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 12px;
+}
+
+/* Mobile Ansicht: 2 Spalten auf dem Handy, 1 Spalte auf sehr kleinen Geräten */
 @media (max-width: 768px) {
-    .admin-produkt {
+    #adminProduktListe {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .admin-produkt-img {
+        height: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    #adminProduktListe {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ========================================
+   PRODUKTDETAILS – AKTIONSBUTTONS
+   ======================================== */
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;      /* Zentriert die Buttons horizontal */
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    margin-top: 20px;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.action-buttons .btn {
+    width: 100%;              /* Volle Breite des Containers */
+    max-width: 280px;         /* Aber nicht breiter als 280px */
+    min-height: 48px;
+    padding: 12px 20px;
+    margin: 0 auto;           /* Zentriert den Button im Container */
+    font-size: 15px;
+    text-align: center;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0d47a1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Roboto Condensed', sans-serif;
+    cursor: pointer;
+}
+
+.action-buttons .btn:hover {
+    background-color: #1565c0;
+}
+
+/* Mobile Ansicht */
+@media (max-width: 768px) {
+    .action-buttons {
+        padding: 0 45px;      /* Etwas Abstand zum Rand */
+        width: 100%;
+    }
+    .action-buttons .btn {
+        width: 100%;          /* Volle Breite des Containers (innerhalb des Paddings) */
+        max-width: 100%;      /* Keine zusätzliche Begrenzung */
+        margin: 0 auto;
+    }
+}
+
+/* ========================================
+   WUNSCHLISTE
+   ======================================== */
+
+.wunschliste-item {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 15px;
+    border: 1px solid #eee;
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .wunschliste-item {
         flex-direction: column;
         align-items: flex-start;
-        padding: 15px;
     }
-
-    .admin-produkt-img {
-        width: 60px;
-        height: 60px;
-        margin-bottom: 10px;
-    }
-
-    .admin-produkt-info {
+    .wunschliste-item > div:last-child {
         width: 100%;
+        margin-top: 10px;
     }
-
-    .admin-produkt-actions {
-        width: 100%;
-        margin-top: 15px;
-        justify-content: space-between;
-    }
-
-    .admin-produkt-actions .btn {
+    .wunschliste-item .btn {
         flex: 1;
         text-align: center;
     }
 }
 
-/* ========================================
-   TRUST BADGES (Produktseite)
-   ======================================== */
+/* Nur für Handys (Bildschirmbreite bis 768px) */
+@media (max-width: 768px) {
+    .shop-intro {
+        /* 209px ist dein Header. Plus ca. 20-30px Abstand nach unten. */
+        scroll-margin-top: 240px; 
+    }
+}
 
-.trust-badges {
-    background-color: #f9f9f9;
-    border-left: 4px solid #4caf50;
-    padding: 15px;
-    border-radius: 4px;
+/* Button-Styling für das Dropdown */
+.dropbtn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary-color);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+}
+
+.dropbtn::after {
+    content: " ▾";
+    font-size: 12px;
+}
+
+.dropbtn:hover {
+    color: var(--accent-color);
+}
+
+
+
+/* Handy-Ansicht für den Button */
+@media (max-width: 768px) {
+    .main-nav button.dropbtn {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 15px 12px;
+        text-align: left;
+        font-size: 15px;
+        color: var(--primary-color);
+        background: transparent;
+        border: none;
+    }
+
+    .main-nav button.dropbtn::after {
+        margin-left: auto;
+        content: "▾";
+        font-size: 12px;
+        transition: transform 0.3s;
+    }
+
+    /* Pfeil dreht sich, wenn das Menü offen ist */
+    .main-nav .dropdown.open button.dropbtn::after {
+        transform: rotate(180deg);
+    }
+}
+
+
+
+
+@media (max-width: 768px) {
+    /* Wenn die Klasse "open" gesetzt ist, soll das Menü auf jeden Fall da sein */
+    .main-nav .dropdown.open .dropdown-content {
+        display: flex !important;
+        flex-direction: column !important;
+        max-height: 600px !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        padding: 15px 10px !important;
+        background: #f8f8f8 !important;
+        transform: none !important;
+        position: static !important;
+    }
+
+    /* 2. Wenn der Button geklickt wurde (Klasse "open"), aufklappen */
+    .main-nav .dropdown.open .dropdown-content {
+        display: flex !important;
+        max-height: 600px; /* Groß genug, damit alles reinpasst */
+        opacity: 1;
+        visibility: visible;
+        padding: 15px 10px;
+    }
+
+    /* 3. Die Spalten (Beliebte Kategorien / Empfehlungen) untereinander anzeigen */
+    .main-nav .dropdown-content {
+        flex-direction: column; 
+    }
+
+    /* 4. Den Button so stylen, dass er antippbar ist */
+    .main-nav button.dropbtn {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 15px 12px;
+        background: transparent;
+        border: none;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--primary-color);
+        text-align: left;
+        cursor: pointer;
+    }
+    
+    /* 5. Die Links im Untermenü nach links ausrichten */
+    .main-nav .dropdown-column {
+        width: 100%;
+        align-items: flex-start;
+        margin-bottom: 15px;
+    }
+
+    .main-nav .dropdown-column a {
+        display: block;
+        padding: 10px 15px;
+        font-size: 14px;
+        color: #555;
+        text-align: left;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* 6. Den Pfeil drehen, wenn es offen ist */
+    .main-nav button.dropbtn::after {
+        margin-left: auto;
+        content: "▾";
+        transition: transform 0.3s;
+    }
+    .main-nav .dropdown.open button.dropbtn::after {
+        transform: rotate(180deg);
+    }
+}
+
+
+
+/* Hilfe Link - oben*/
+
+/* Grundlegendes Setup */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9; /* Ein sehr helles Grau für den Hintergrund */
+}
+
+.hilfe-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* --- 1. Header & Bild --- */
+.hilfe-header {
+    text-align: center;
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.hilfe-header h1 {
+    font-family: 'Georgia', serif; /* Eine schöne Serifenschrift für den Shopnamen */
+    font-size: 3rem;
+    color: #1c443b; /* Das dunkle Grün deines Shops */
+    margin-bottom: 5px;
+    letter-spacing: 2px;
+}
+
+.hilfe-header h2 {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 1.2rem;
+    color: #555;
+    letter-spacing: 3px;
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-weight: normal;
+}
+
+/* Das Bücherregal-Bild */
+.hero-image {
+    width: 100%;
+    max-width: 780px; /* Deine angegebene Breite */
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 8px; /* Leicht abgerundete Ecken */
+    /*box-shadow: 0 4px 10px rgba(0,0,0,0.1);*/
+}
+
+/* --- 2. Das Suchfeld 
+.hilfe-suche {
+    margin: -30px auto 50px auto; /* Zieht das Suchfeld etwas über das Bild 
+    max-width: 800px;
+    position: relative;
+    z-index: 10;
+}--- */
+.hilfe-suche {
+    margin: -30px auto 50px auto; 
+    max-width: 800px;
+    position: relative;
+    z-index: 10;
+    
+    /* NEU: Das erzeugt die graue Linie */
+    border-bottom: 1px solid #dcdcdc; 
+    padding-bottom: 40px; /* Abstand zwischen Linie und den Icons darunter */
+}
+
+.such-wrapper {
+    display: flex;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.such-wrapper input {
+    flex: 1;
+    padding: 15px 20px;
+    border: none;
+    outline: none;
+    font-size: 1.1rem;
+}
+
+.such-wrapper button {
+    background-color: #23b5d3; /* Das Blau aus dem Beispiel */
+    color: white;
+    border: none;
+    padding: 0 30px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background 0.3s;
+}
+
+.such-wrapper button:hover {
+    background-color: #1a8f9f;
+}
+
+/* --- 3. Die Kategorien (Gitter-Layout) --- */
+.hilfe-kategorien {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Automatische Spalten */
+    gap: 40px; /* Abstand zwischen den Kacheln */
+    padding: 20px 0;
+    text-align: center;
+}
+
+.kategorie-karte {
+    padding: 20px;
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.kategorie-karte:hover {
+    transform: translateY(-5px); /* Kleiner Hover-Effekt */
+}
+
+.kategorie-karte .icon {
+    font-size: 3rem;
+    color: #1c443b; /* Deine Shop-Farbe */
+    margin-bottom: 15px;
+}
+
+.kategorie-karte h3 {
+    font-size: 1.1rem;
+    color: #222;
+    margin-bottom: 10px;
+}
+
+.kategorie-karte p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+
+/* Container für Autor und Badge */
+.autor-bereich {
+    display: flex;
+    flex-direction: column; /* Zwingt die Elemente untereinander */
+    align-items: flex-start; /* Richtet alles linksbündig aus */
     margin-bottom: 20px;
 }
 
-.trust-badges ul {
+/* Der Autorenname */
+.autor-bereich .autor {
     margin: 0;
+    font-size: 18px;
+    color: #666;
 }
 
-
-
-/* Mikrofon-Button */
-#micBtn.listening {
-    animation: pulse 1s infinite;
-    background-color: #4caf50 !important;
-    border-color: #4caf50 !important;
-}
-
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-}
-
-
-/* ========================================
-   MIKROFON-BUTTON IM HEADER
-   ======================================== */
-
-.mic-header-btn {
-    display: none; /* Standardmäßig versteckt (Desktop) */
-    background: #e94560;
-    border: 2px solid #e94560;
+/* Das rote Badge */
+.badge-unterschrieben {
+    display: inline-block; /* Wichtig für Samsung Internet */
+    width: auto; /* Verhindert, dass es sich über die ganze Breite zieht */
+    max-width: 100%;
+    background-color: #e94560;
     color: white;
-    font-size: 20px;
-    padding: 8px 12px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-    margin-left: 10px;
-}
-
-.mic-header-btn {
-    background: transparent;
-    color: #333;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    padding: 5px;
-    transition: color 0.2s;
-}
-
-.mic-header-btn:hover {
-    color: #e94560;
-}
-
-.mic-header-btn:focus {
-    outline: none;
-}
-
-/* Auf dem Handy sichtbar machen */
-@media (max-width: 768px) {
-    .mic-header-btn {
-        display: block;
-        position: absolute;
-        right: 15px;
-        top: 15px;
-    }
-    
-    /* Die ganze Suchleiste auf dem Handy ausblenden */
-    .suchleiste {
-        display: none !important;
-    }
-
-    /* Suchleiste im Hamburger-Menü ausblenden */
-    .header-container nav .suchleiste {
-        display: none !important;
-    }
-}
-
-/* ========================================
-   MIKROFON-BUTTON (PC)
-   ======================================== */
-
-.mic-pc {
-    display: flex;
-    align-items: center;
-}
-
-.mic-pc button {
-    background: transparent;
-    border: none;
-    color: #333;
-    font-size: 20px;
-    cursor: pointer;
-    padding: 5px 10px;
-    transition: color 0.2s, transform 0.2s;
-}
-
-.mic-pc button:hover {
-    color: #e94560;
-    transform: scale(1.1);
-}
-
-.mic-pc button:focus {
-    outline: none;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: bold;
+    line-height: normal;
+    white-space: normal; /* Erlaubt Umbruch, falls der Text zu lang ist */
+    clear: both; /* Verhindert, dass es von anderen Elementen beeinflusst wird */
 }

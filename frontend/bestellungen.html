@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meine Bestellungen - TechStore</title>
+    <title>Meine Bestellungen - Casa do Livro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
@@ -11,60 +11,127 @@
 </head>
 <body>
 
-    <!-- HEADER -->
-    <header>
-    <div class="header-container">
-        <!-- Hamburger Button (nur auf Handy sichtbar) -->
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
-
-        <a href="index.html" class="logo">
-            <img src="bilder/logo.png" alt="TechStore Logo">
-        </a>
-
-               <nav id="mainNav">
-            <!-- Schließen-Button: Ganz oben links im Menü -->
-            <button class="close-menu-btn" onclick="toggleMobileMenu()">✕</button>
-                <div class="suchleiste">
-                    <input type="text" id="suchInput" placeholder="🔍 Durchsuche TechTOHFA" autocomplete="off">
-                    <button onclick="sucheAusfuehrenGlobal()">Suchen</button>
-                </div>
-                <ul>
-                    <li><a href="index.html">🏠 Produkte</a></li>
-                    <li><a href="warenkorb.html" class="cart-icon">
-                            <span class="cart-count" id="cartCount">0</span>
-                            🛒 Warenkorb
-                        </a></li>
-                    <li id="loginLink"><a href="login.html">Anmelden</a></li>
-                    <li id="userMenu" style="display:none; position:relative;">
-                        <a href="#" id="userName" onclick="toggleDropdown(event)">👤 <span id="userNameText">Benutzer</span> ▾</a>
-                        <div id="userDropdown" class="user-dropdown">
-                            <a href="profil.html">👤 Mein Konto</a>
-                            <a href="bestellungen.html">📦 Meine Bestellungen</a>
-                            <a href="admin.html" id="adminLink" style="display:none;">⚙️ Admin-Bereich</a>
-                            <a href="#" onclick="logout()">🚪 Abmelden</a>
+    <!-- HEADER (Kopie von index.html) -->
+    <header class="site-header">
+        <div class="top-bar">
+            <div class="top-inner">
+                <div class="top-links">
+                    <div id="authBereich">
+                        <a href="login.html" id="loginLink">Anmelden</a>
+                        <a href="registrieren.html" id="registerLink">Registrieren</a>
+                        <div id="userMenu" class="user-dropdown-container" style="display: none;">
+                            <a href="#" id="userName" onclick="toggleDropdown(event)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 2px;">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <span id="userNameText">Benutzer</span> ▾
+                            </a>
+                            <div id="userDropdown" class="user-dropdown">
+                                <a href="profil.html">👤 Mein Konto</a>
+                                <a href="bestellungen.html">📦 Meine Bestellungen</a>
+                                <a href="wunschliste.html">❤️ Meine Wunschliste</a>
+                                <a href="admin.html" id="adminLink" style="display: none;">⚙️ Admin-Bereich</a>
+                                <a href="#" onclick="logout()">🚪 Abmelden</a>
+                            </div>
                         </div>
-                    </li>
-                </ul>
-            </nav>
+                    </div>
+                   <a href="hilfe.html">Hilfe</a>
+                </div>                
+            </div>
         </div>
+
+        <div class="header-main">
+            <button class="menu-toggle" id="menuToggle" type="button" aria-label="Navigation öffnen">
+                <span class="book-menu-icon" aria-hidden="true">
+                    <span class="book book-one"></span>
+                    <span class="book book-two"></span>
+                    <span class="book book-three"></span>
+                </span>
+            </button>
+
+            <a href="index.html" class="logo">
+                <img src="bilder/logo.png" alt="Casa do Livro Logo">
+            </a>
+
+            <form class="search-box" action="#" method="get" onsubmit="event.preventDefault(); sucheAusfuehrenGlobal();">
+                <select name="category" aria-label="Kategorie">
+                    <option value="all">Alle Bücher</option>
+                    <option value="romane">Romane</option>
+                    <option value="fachbuecher">Fachbücher</option>
+                </select>
+                <input type="search" id="suchInput" name="q" placeholder="Finde ein Buch ..." aria-label="Buch suchen">
+                <button type="submit" aria-label="Suchen">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #000;">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </form>
+
+            <a href="warenkorb.html" class="cart">
+                <span class="cart-count" id="cartCount">0</span>
+                <svg class="cart-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-label="Einkaufstasche" role="img">
+                    <path d="M19 24 C19 5 45 5 45 24" fill="none" stroke="#1A4D46" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M11 22 H53 L57 59 H7 Z" fill="#1A4D46" stroke="#1A4D46" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M17 32 H47" stroke="#E09F3E" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span class="cart-info">
+                    <span class="cart-label">Warenkorb</span>
+                    <strong>0,00 €</strong>
+                </span>
+            </a>
+        </div>
+
+        <nav class="main-nav" id="mainNav">
+            <button class="close-menu-btn" id="closeMenuBtn" type="button" aria-label="Navigation schließen">✕</button>
+            <a href="index.html?kategorie=7">★ Bestseller</a>
+            
+            <a href="index.html?kategorie=13">✍️ Neuheiten</a>
+            <a href="index.html?kategorie=5">🧸 Kinderbücher</a>
+            <a href="index.html?kategorie=4">🎓 Fachbücher</a>
+            <a href="index.html?kategorie=12">🏷️ Angebote</a>
+            <a href="index.html?kategorie=8">🎲 Spiele</a>
+            <a href="index.html?kategorie=9">🎁 Geschenke</a>
+            <a href="index.html?kategorie=10">✒️ Unterschrieben</a>
+            <a href="index.html?kategorie=11">🪶 Poesie</a>
+        </nav>
     </header>
 
-    <!-- MAIN -->
-    <main class="container">
-        <h1>Meine Bestellungen</h1>
-        <p style="color:#888; margin-top:5px;">Ihre bisherigen Bestellungen im Überblick</p>
-        
-        <div id="bestellungenInhalt" style="margin-top:30px;">
-            <!-- Wird per JavaScript gefüllt -->
+    <!-- MAIN: Bestellungen -->
+    <main class="container" style="padding: 40px 20px;">
+        <div class="profil-layout">
+            
+            <!-- LINKE SPALTE: Menü -->
+            <div class="profil-sidebar">
+                <h3>Mein Konto</h3>
+                <ul>
+                    <li><a href="profil.html">Dashboard</a></li>
+                    <li><a href="persoenliche-daten.html">Persönliche Daten</a></li>
+                    <li><a href="rechnungsadresse.html">Rechnungsadresse</a></li>
+                    <li><a href="bestellungen.html" class="active">Bestellungen</a></li>
+                    <li><a href="wunschliste.html">Wunschliste</a></li>
+                </ul>
+            </div>
+
+            <!-- RECHTE SPALTE: Inhalt -->
+            <div class="profil-content">
+                <h2>Meine Bestellungen</h2>
+                <p class="welcome-text">Ihre bisherigen Bestellungen im Überblick</p>
+                
+                <div id="bestellungenListe">
+                    <!-- Wird per JS gefüllt -->
+                </div>
+            </div>
         </div>
     </main>
 
-    <!-- FOOTER -->
     <footer>
-        &copy; 2026 TechStore - Alle Rechte vorbehalten
+        &copy; 2026 Casa do Livro - Alle Rechte vorbehalten
     </footer>
 
     <script src="js/api.js"></script>
+    <script src="js/index.js"></script>
     <script src="js/bestellungen.js"></script>
 </body>
 </html>

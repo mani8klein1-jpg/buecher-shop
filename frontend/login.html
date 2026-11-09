@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anmelden - TechStore</title>
+    <title>Anmelden - Casa do Livro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
@@ -11,56 +11,131 @@
 </head>
 <body>
 
-    <!-- HEADER -->
-    <header>
-        <div class="header-container">
-            <a href="index.html" class="logo">
-                <img src="bilder/logo.png" alt="TechStore Logo">
-            </a>
-            <nav>
-                <div class="suchleiste">
-                    <input type="text" id="suchInput" placeholder="🔍 Durchsuche TechTOHFA" autocomplete="off">
-                    <button onclick="sucheAusfuehrenGlobal()">Suchen</button>
-                </div>
-                <ul>
-                    <li><a href="index.html">Produkte</a></li>
-                </ul>
-            </nav>
+    <!-- HEADER (Kopie von index.html) -->
+    <header class="site-header">
+        <div class="top-bar">
+            <div class="top-inner">
+                <div class="top-links">
+                    <a href="login.html">Anmelden</a>
+                    <a href="registrieren.html">Registrieren</a>
+                   <a href="hilfe.html">Hilfe</a>
+                </div>                
+            </div>
         </div>
+
+        <div class="header-main">
+            <button class="menu-toggle" id="menuToggle" type="button" aria-label="Navigation öffnen">
+                <span class="book-menu-icon" aria-hidden="true">
+                    <span class="book book-one"></span>
+                    <span class="book book-two"></span>
+                    <span class="book book-three"></span>
+                </span>
+            </button>
+
+            <a href="index.html" class="logo">
+                <img src="bilder/logo.png" alt="Casa do Livro Logo">
+            </a>
+
+            <form class="search-box" action="#" method="get" onsubmit="event.preventDefault(); sucheAusfuehrenGlobal();">
+                <select name="category" aria-label="Kategorie">
+                    <option value="all">Alle Bücher</option>
+                    <option value="romane">Romane</option>
+                    <option value="fachbuecher">Fachbücher</option>
+                </select>
+                <input type="search" id="suchInput" name="q" placeholder="Finde ein Buch ..." aria-label="Buch suchen">
+                <button type="submit" aria-label="Suchen">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #000;">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </form>
+
+            <a href="warenkorb.html" class="cart">
+                <span class="cart-count" id="cartCount">0</span>
+                <svg class="cart-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-label="Einkaufstasche" role="img">
+                    <path d="M19 24 C19 5 45 5 45 24" fill="none" stroke="#1A4D46" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M11 22 H53 L57 59 H7 Z" fill="#1A4D46" stroke="#1A4D46" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M17 32 H47" stroke="#E09F3E" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span class="cart-info">
+                    <span class="cart-label">Warenkorb</span>
+                    <strong>0,00 €</strong>
+                </span>
+            </a>
+        </div>
+
+        <nav class="main-nav" id="mainNav">
+            <button class="close-menu-btn" id="closeMenuBtn" type="button" aria-label="Navigation schließen">✕</button>
+            <a href="index.html?kategorie=7">★ Bestseller</a>
+            
+            <a href="index.html?kategorie=13">✍️ Neuheiten</a>
+            <a href="index.html?kategorie=5">🧸 Kinderbücher</a>
+            <a href="index.html?kategorie=4">🎓 Fachbücher</a>
+            <a href="index.html?kategorie=12">🏷️ Angebote</a> <!-- ID 12 -->
+            <a href="index.html?kategorie=8">🎲 Spiele</a>
+            <a href="index.html?kategorie=9">🎁 Geschenke</a>
+            <a href="index.html?kategorie=10">✒️ Unterschrieben</a>
+            <a href="index.html?kategorie=11">🪶 Poesie</a>
+        </nav>
     </header>
 
-    <!-- FORMULAR -->
-    <div class="form-box">
-        <h1 id="formTitle">Anmelden</h1>
-        <p class="subtitle" id="formSubtitle">Melden Sie sich an, um einzukaufen.</p>
-        
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">E-Mail</label>
-                <input type="email" id="email" required placeholder="ihre@email.de" autocomplete="off">
-            </div>
-            
-            <div class="form-group">
-                <label for="passwort">Passwort</label>
-                <input type="password" id="passwort" required placeholder="••••••••" autocomplete="new-password">
-            </div>
-            
-            <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
-                Anmelden
+        <!-- MITTLERER BANNER (Goldgelb) -->
+    <section class="promo-banner">
+        <div class="promo-content">
+            <span class="promo-eyebrow">DEINE NÄCHSTE LIEBLINGSGESCHICHTE</span>
+            <h2>Bücher für<br>kalte Tage</h2>
+            <p>
+                Entdecke unsere Neuheiten und Bestseller
+                und mach es dir mit einer guten Geschichte gemütlich.
+            </p>
+            <button type="button" onclick="window.location.href='index.html'">
+                Jetzt stöbern
             </button>
-        </form>
-        
-        <p class="error" id="errorMsg" style="display:none;"></p>
-        
-        <p style="text-align:center; margin-top:20px; color:#888; font-size:14px;">
-            <span id="switchText">Noch kein Konto?</span>
-            <a href="#" id="switchLink" style="color:#e94560; font-weight:700; text-decoration:none;">
-                Jetzt registrieren
-            </a>
-        </p>
-    </div>
+        </div>
+        <div class="promo-image">
+            <img src="bilder/banner.png" alt="Bücher für gemütliche Lesestunden">
+        </div>
+    </section>
 
+    <!-- MAIN (Login-Formular) -->
+    <main class="container" style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+        <div  id="loginTitel" class="form-box" style="width: 100%; max-width: 500px; margin: 40px auto;">
+            <h1>Anmelden</h1>
+            <p class="subtitle">Melden Sie sich in Ihrem Konto an.</p>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">E-Mail-Adresse</label>
+                    
+                    <input type="email" id="email" autocomplete="off" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="passwort">Passwort</label>
+                    
+                    <input type="password" id="passwort" autocomplete="new-password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Einloggen</button>
+                
+                <p class="error" id="fehlerMeldung" style="display: none;"></p>
+            </form>
+
+            <div style="text-align: center; margin-top: 15px; font-size: 14px;">
+                <a href="#" style="color: #666; text-decoration: none;">Passwort vergessen?</a><br><br>
+                <a href="registrieren.html" style="color: #e94560; text-decoration: none; font-weight: bold;">Erstelle ein Konto</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 Casa do Livro - Alle Rechte vorbehalten
+    </footer>
+
+    <!-- Wir binden die Skripte ein, damit das Menü auf dem Handy funktioniert -->
     <script src="js/api.js"></script>
+    <script src="js/index.js"></script> 
     <script src="js/login.js"></script>
 </body>
 </html>

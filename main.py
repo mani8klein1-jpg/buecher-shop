@@ -64,11 +64,11 @@ def sende_bestaetigungs_email(empfaenger_email: str, kunden_name: str, bestellnu
     <body>
         <div class="container">
             <div class="header">
-                <h1>TECH<span>TOHFA</span></h1>
+                <h1>CASA DO <span>LIVRO</span></h1>
             </div>
             <div class="content">
                 <h2>Hallo {kunden_name},</h2>
-                <p>vielen Dank für deine Bestellung bei TechTOHFA! Wir haben deine Bestellung erhalten und bearbeiten sie umgehend.</p>
+                <p>vielen Dank für deine Bestellung bei Casa do Livro! Wir haben deine Bestellung erhalten und bearbeiten sie umgehend.</p>
                 
                 <div class="test-hint">
                     ⚠️ <strong>WICHTIG:</strong> Dies ist eine TEST-BESTELLUNG! Es handelt sich um ein Portfolio-Projekt. Es wurde kein echter Kauf getätigt und es wird kein Geld abgebucht.
@@ -90,10 +90,10 @@ def sende_bestaetigungs_email(empfaenger_email: str, kunden_name: str, bestellnu
                 <div class="total">Gesamt: {str(round(gesamtpreis, 2)).replace('.', ',')} €</div>
                 
                 <p style="margin-top: 30px;">Wir wünschen dir viel Freude mit deiner Bestellung!</p>
-                <p>Viele Grüße,<br>Dein TechTOHFA-Team</p>
+                <p>Viele Grüße,<br>Dein Casa do Livro-Team</p>
             </div>
             <div class="footer">
-                &copy; 2026 TechTOHFA - Alle Rechte vorbehalten
+                &copy; 2026 Casa do Livro - Alle Rechte vorbehalten
             </div>
         </div>
     </body>
@@ -107,9 +107,9 @@ def sende_bestaetigungs_email(empfaenger_email: str, kunden_name: str, bestellnu
         "content-type": "application/json"
     }
     payload = {
-        "sender": {"email": sender_email, "name": "TechTOHFA"},
+        "sender": {"email": sender_email, "name": "Casa do Livro"},
         "to": [{"email": empfaenger_email}],
-        "subject": f"Deine Bestellung bei TechTOHFA (#{bestellnummer})",
+        "subject": f"Deine Bestellung bei Casa do Livro (#{bestellnummer})",
         "htmlContent": body
     }
 
@@ -119,13 +119,120 @@ def sende_bestaetigungs_email(empfaenger_email: str, kunden_name: str, bestellnu
     except Exception as e:
         print(f"Fehler beim E-Mail-Versand: {e}")
 
+def sende_admin_benachrichtigung(kunden_email: str, kunden_name: str, bestellnummer: int, gesamtpreis: float, positionen: list, adresse: dict):
+    """Sendet eine Benachrichtigung an den Admin über eine neue Bestellung."""
+    api_key = os.getenv("BREVO_API_KEY")
+    sender_email = os.getenv("SMTP_SENDER")
+    admin_email = "mani8klein1@gmail.com" # Meine E-Mail!
+
+    if not api_key or not sender_email:
+        print("Brevo-Konfiguration fehlt – Admin-E-Mail wird nicht gesendet.")
+        return
+
+    positionen_html = ""
+    for pos in positionen:
+        positionen_html += f"""
+        <tr>
+            <td>{pos['name']}</td>
+            <td style="text-align: center;">{pos['menge']}</td>
+            <td style="text-align: right;">{str(round(pos['preis'] * pos['menge'], 2)).replace('.', ',')} €</td>
+        </tr>
+        """
+        
+        body = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            body {{ font-family: 'Roboto Condensed', Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 0; }}
+            .container {{ max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
+            .header {{ background-color: #1a1a1a; padding: 20px; text-align: center; }}
+            .header h1 {{ color: #ffffff; margin: 0; font-size: 24px; letter-spacing: 2px; }}
+            .header h1 span {{ color: #E09F3E; }}
+            .content {{ padding: 30px; color: #333333; }}
+            .content h2 {{ font-size: 20px; margin-bottom: 20px; color: #1a1a1a; border-bottom: 2px solid #e94560; padding-bottom: 10px; }}
+            .info-box {{ background: #f9f9f9; border-left: 4px solid #e94560; padding: 15px; margin-bottom: 20px; border-radius: 4px; }}
+            .info-box p {{ margin: 5px 0; font-size: 15px; }}
+            .info-box strong {{ color: #1a1a1a; }}
+            .order-table {{ width: 100%; border-collapse: collapse; margin: 20px 0; }}
+            .order-table th {{ background: #1a1a1a; color: #ffffff; padding: 10px; text-align: left; font-size: 14px; }}
+            .order-table td {{ padding: 10px; border-bottom: 1px solid #eee; font-size: 14px; }}
+            .total {{ text-align: right; font-size: 18px; font-weight: bold; color: #e94560; margin-top: 20px; }}
+            .footer {{ background-color: #f9f9f9; padding: 20px; text-align: center; font-size: 12px; color: #888888; }}
+            .btn {{ display: inline-block; padding: 12px 24px; background-color: #e94560; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: bold; margin-top: 20px; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>CASA DO <span>LIVRO</span> ADMIN</h1>
+            </div>
+            <div class="content">
+                <h2>Neue Bestellung eingegangen! 🛒</h2>
+                
+                <div class="info-box">
+                    <p><strong>Bestellnummer:</strong> #{bestellnummer}</p>
+                    <p><strong>Kunde:</strong> {kunden_name} ({kunden_email})</p>
+                </div>
+
+                <div class="info-box" style="border-left-color: #1a1a1a;">
+                    <p><strong>Lieferadresse:</strong></p>
+                    <p>{adresse['vorname']} {adresse['nachname']}<br>
+                    {adresse['strasse']}<br>
+                    {adresse['plz']} {adresse['ort']}</p>
+                </div>
+
+                <h3>Bestellte Artikel:</h3>
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th>Produkt</th>
+                            <th style="text-align: center;">Menge</th>
+                            <th style="text-align: right;">Preis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {positionen_html}
+                    </tbody>
+                </table>
+                <div class="total">Gesamt: {str(round(gesamtpreis, 2)).replace('.', ',')} €</div>
+                
+                <p style="margin-top: 30px;">Bitte logge dich in den Admin-Bereich ein, um die Bestellung zu bearbeiten und zu versenden.</p>
+            </div>
+            <div class="footer">
+                &copy; 2026 Casa do Livro - Admin-System
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    url = "https://api.brevo.com/v3/smtp/email"
+    headers = {
+        "accept": "application/json",
+        "api-key": api_key,
+        "content-type": "application/json"
+    }
+    payload = {
+        "sender": {"email": sender_email, "name": "Casa do Livro System"},
+        "to": [{"email": admin_email}],
+        "subject": f"NEUE BESTELLUNG #{bestellnummer} - {kunden_name}",
+        "htmlContent": body
+    }
+
+    try:
+        response = requests.post(url, headers=headers, json=payload)
+        print(f"Admin-Benachrichtigung Status: {response.status_code}")
+    except Exception as e:
+        print(f"Fehler beim Admin-E-Mail-Versand: {e}")
 
 app = FastAPI(title="TechStore API")
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=False,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -276,12 +383,16 @@ def delete_produkt(
     if not db_produkt:
         raise HTTPException(status_code=404, detail="Produkt nicht gefunden")
     
+    # Alle Verknüpfungen löschen
     db.query(models.Warenkorb).filter(models.Warenkorb.produkt_id == produkt_id).delete()
     db.query(models.Bestellposition).filter(models.Bestellposition.produkt_id == produkt_id).delete()
+    db.query(models.Wunschliste).filter(models.Wunschliste.produkt_id == produkt_id).delete()
     
     db.delete(db_produkt)
     db.commit()
     return {"message": "Produkt gelöscht"}
+
+
 
 @app.post("/warenkorb", response_model=schemas.WarenkorbResponse)
 def add_warenkorb(
@@ -446,6 +557,8 @@ def create_bestellung(
             "preis": pos["preis"]
         })
 
+        # (Dein bestehender Code für background_tasks.add_task(sende_bestaetigungs_email...) bleibt hier)
+
     background_tasks.add_task(
         sende_bestaetigungs_email,
         current_user.email,
@@ -454,6 +567,26 @@ def create_bestellung(
         neue_bestellung.gesamtpreis,
         positionen_fuer_email
     )
+
+    # NEU: Benachrichtigung an den Admin senden
+    adress_dict = {
+        "vorname": adresse.vorname,
+        "nachname": adresse.nachname,
+        "strasse": adresse.strasse,
+        "plz": adresse.plz,
+        "ort": adresse.ort
+    }
+    
+    background_tasks.add_task(
+        sende_admin_benachrichtigung,
+        current_user.email,
+        f"{adresse.vorname} {adresse.nachname}",
+        neue_bestellung.id,
+        neue_bestellung.gesamtpreis,
+        positionen_fuer_email,
+        adress_dict
+    )
+
     return neue_bestellung
 
 @app.get("/bestellungen", response_model=List[schemas.BestellungResponse])
@@ -463,7 +596,7 @@ def get_bestellungen(
 ):
     return db.query(models.Bestellung).filter(models.Bestellung.benutzer_id == current_user.id).all()
 
-@app.get("/bestellungen/{bestellung_id}", response_model=schemas.BestellungResponse)
+@app.get("/bestellungen/{bestellung_id}")
 def get_bestellung(
     bestellung_id: int,
     current_user: models.Benutzer = Depends(auth.get_current_user),
@@ -477,7 +610,30 @@ def get_bestellung(
     if not bestellung:
         raise HTTPException(status_code=404, detail="Bestellung nicht gefunden")
     
-    return bestellung
+    # Positionen mit Produktnamen anreichern
+    positionen = []
+    for pos in bestellung.positionen:
+        produkt = db.query(models.Produkt).filter(models.Produkt.id == pos.produkt_id).first()
+        positionen.append({
+            "produkt_id": pos.produkt_id,
+            "produkt_name": produkt.name if produkt else "Unbekanntes Produkt",
+            "menge": pos.menge,
+            "preis": pos.preis
+        })
+    
+    return {
+        "id": bestellung.id,
+        "benutzer_id": bestellung.benutzer_id,
+        "gesamtpreis": bestellung.gesamtpreis,
+        "status": bestellung.status,
+        "erstellt_am": bestellung.erstellt_am,
+        "vorname": bestellung.vorname,
+        "nachname": bestellung.nachname,
+        "strasse": bestellung.strasse,
+        "plz": bestellung.plz,
+        "ort": bestellung.ort,
+        "positionen": positionen
+    }
 
 @app.delete("/bestellungen/{bestellung_id}")
 def delete_bestellung(
@@ -517,24 +673,238 @@ def fix_bestellzeit():
     db.close()
     return {"message": "Bestellzeiten repariert!"}
 
+
 # ========================================
 # TEMPORÄR: MIGRATION FÜR BÜCHER-FELDER
 # ========================================
-
 @app.get("/migrate-buecher")
 def migrate_buecher():
     from database import engine
-    from sqlalchemy import text
+    from sqlalchemy import text, inspect
     try:
+        # Prüfen, welche Spalten bereits existieren
+        inspector = inspect(engine)
+        existing_columns = [col['name'] for col in inspector.get_columns('produkte')]
+        
         with engine.connect() as conn:
-            conn.execute(text("ALTER TABLE produkte ADD COLUMN IF NOT EXISTS autor VARCHAR;"))
-            conn.execute(text("ALTER TABLE produkte ADD COLUMN IF NOT EXISTS isbn VARCHAR;"))
-            conn.execute(text("ALTER TABLE produkte ADD COLUMN IF NOT EXISTS verlag VARCHAR;"))
-            conn.execute(text("ALTER TABLE produkte ADD COLUMN IF NOT EXISTS erscheinungsjahr INTEGER;"))
+            # Nur hinzufügen, wenn die Spalte noch fehlt (SQLite-kompatibel)
+            if 'autor' not in existing_columns:
+                conn.execute(text("ALTER TABLE produkte ADD COLUMN autor VARCHAR;"))
+            if 'isbn' not in existing_columns:
+                conn.execute(text("ALTER TABLE produkte ADD COLUMN isbn VARCHAR;"))
+            if 'verlag' not in existing_columns:
+                conn.execute(text("ALTER TABLE produkte ADD COLUMN verlag VARCHAR;"))
+            if 'erscheinungsjahr' not in existing_columns:
+                conn.execute(text("ALTER TABLE produkte ADD COLUMN erscheinungsjahr INTEGER;"))
             conn.commit()
+            
         return {"message": "Migration erfolgreich! Bücher-Felder hinzugefügt."}
     except Exception as e:
         return {"error": str(e)}
+
+
+@app.get("/migrate-bestellungen")
+def migrate_bestellungen():
+    from database import engine
+    from sqlalchemy import text, inspect
+    try:
+        inspector = inspect(engine)
+        existing_columns = [col['name'] for col in inspector.get_columns('bestellungen')]
+        
+        with engine.connect() as conn:
+            if 'vorname' not in existing_columns:
+                conn.execute(text("ALTER TABLE bestellungen ADD COLUMN vorname VARCHAR;"))
+            if 'nachname' not in existing_columns:
+                conn.execute(text("ALTER TABLE bestellungen ADD COLUMN nachname VARCHAR;"))
+            if 'strasse' not in existing_columns:
+                conn.execute(text("ALTER TABLE bestellungen ADD COLUMN strasse VARCHAR;"))
+            if 'plz' not in existing_columns:
+                conn.execute(text("ALTER TABLE bestellungen ADD COLUMN plz VARCHAR;"))
+            if 'ort' not in existing_columns:
+                conn.execute(text("ALTER TABLE bestellungen ADD COLUMN ort VARCHAR;"))
+            conn.commit()
+            
+        return {"message": "Migration erfolgreich! Bestellungs-Felder hinzugefügt."}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+# ========================================
+# WUNSCHLISTE
+# ========================================
+
+@app.get("/wunschliste", response_model=List[schemas.WunschlisteResponse])
+def get_wunschliste(
+    current_user: models.Benutzer = Depends(auth.get_current_user),
+    db: Session = Depends(get_db)
+):
+    eintraege = db.query(models.Wunschliste).filter(
+        models.Wunschliste.benutzer_id == current_user.id
+    ).all()
+    
+    ergebnis = []
+    for eintrag in eintraege:
+        produkt = db.query(models.Produkt).filter(models.Produkt.id == eintrag.produkt_id).first()
+        if produkt:
+            ergebnis.append({
+                "id": eintrag.id,
+                "produkt_id": produkt.id,
+                "produkt_name": produkt.name,
+                "produkt_bild": produkt.bild_url,
+                "produkt_preis": produkt.preis
+            })
+    return ergebnis
+
+
+@app.post("/wunschliste", response_model=schemas.WunschlisteResponse)
+def add_wunschliste(
+    eintrag: schemas.WunschlisteCreate,
+    current_user: models.Benutzer = Depends(auth.get_current_user),
+    db: Session = Depends(get_db)
+):
+    # Prüfen, ob Produkt existiert
+    produkt = db.query(models.Produkt).filter(models.Produkt.id == eintrag.produkt_id).first()
+    if not produkt:
+        raise HTTPException(status_code=404, detail="Produkt nicht gefunden")
+    
+    # Prüfen, ob schon vorhanden
+    existiert = db.query(models.Wunschliste).filter(
+        models.Wunschliste.benutzer_id == current_user.id,
+        models.Wunschliste.produkt_id == eintrag.produkt_id
+    ).first()
+    
+    if existiert:
+        raise HTTPException(status_code=400, detail="Produkt ist bereits auf der Wunschliste")
+    
+    neuer_eintrag = models.Wunschliste(
+        benutzer_id=current_user.id,
+        produkt_id=eintrag.produkt_id
+    )
+    db.add(neuer_eintrag)
+    db.commit()
+    db.refresh(neuer_eintrag)
+    
+    return {
+        "id": neuer_eintrag.id,
+        "produkt_id": produkt.id,
+        "produkt_name": produkt.name,
+        "produkt_bild": produkt.bild_url,
+        "produkt_preis": produkt.preis
+    }
+
+
+@app.delete("/wunschliste/{eintrag_id}")
+def delete_wunschliste(
+    eintrag_id: int,
+    current_user: models.Benutzer = Depends(auth.get_current_user),
+    db: Session = Depends(get_db)
+):
+    eintrag = db.query(models.Wunschliste).filter(
+        models.Wunschliste.id == eintrag_id,
+        models.Wunschliste.benutzer_id == current_user.id
+    ).first()
+    
+    if not eintrag:
+        raise HTTPException(status_code=404, detail="Eintrag nicht gefunden")
+    
+    db.delete(eintrag)
+    db.commit()
+    return {"message": "Von der Wunschliste entfernt"}
+
+
+# ========================================
+# RECHNUNGSADRESSE
+# ========================================
+
+@app.get("/benutzer/rechnungsadresse", response_model=schemas.RechnungsadresseResponse)
+def get_rechnungsadresse(
+    current_user: models.Benutzer = Depends(auth.get_current_user)
+):
+    return current_user
+
+
+@app.put("/benutzer/rechnungsadresse", response_model=schemas.RechnungsadresseResponse)
+def update_rechnungsadresse(
+    daten: schemas.RechnungsadresseUpdate,
+    current_user: models.Benutzer = Depends(auth.get_current_user),
+    db: Session = Depends(get_db)
+):
+    for key, value in daten.dict().items():
+        if value is not None:
+            setattr(current_user, key, value)
+    
+    db.commit()
+    db.refresh(current_user)
+    return current_user
+
+
+@app.get("/migrate-benutzer")
+def migrate_benutzer():
+    from database import engine
+    from sqlalchemy import text, inspect
+    try:
+        inspector = inspect(engine)
+        existing_columns = [col['name'] for col in inspector.get_columns('benutzer')]
+        
+        with engine.connect() as conn:
+            if 'rechnung_vorname' not in existing_columns:
+                conn.execute(text("ALTER TABLE benutzer ADD COLUMN rechnung_vorname VARCHAR;"))
+            if 'rechnung_nachname' not in existing_columns:
+                conn.execute(text("ALTER TABLE benutzer ADD COLUMN rechnung_nachname VARCHAR;"))
+            if 'rechnung_strasse' not in existing_columns:
+                conn.execute(text("ALTER TABLE benutzer ADD COLUMN rechnung_strasse VARCHAR;"))
+            if 'rechnung_plz' not in existing_columns:
+                conn.execute(text("ALTER TABLE benutzer ADD COLUMN rechnung_plz VARCHAR;"))
+            if 'rechnung_ort' not in existing_columns:
+                conn.execute(text("ALTER TABLE benutzer ADD COLUMN rechnung_ort VARCHAR;"))
+            conn.commit()
+            
+        return {"message": "Migration erfolgreich! Rechnungsadress-Felder hinzugefügt."}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.put("/benutzer/ich", response_model=schemas.BenutzerResponse)
+def update_benutzer(
+    daten: dict,
+    current_user: models.Benutzer = Depends(auth.get_current_user),
+    db: Session = Depends(get_db)
+):
+    if 'name' in daten and daten['name']:
+        current_user.name = daten['name']
+    if 'email' in daten and daten['email']:
+        # Prüfen, ob E-Mail schon von einem anderen Benutzer verwendet wird
+        existiert = db.query(models.Benutzer).filter(
+            models.Benutzer.email == daten['email'],
+            models.Benutzer.id != current_user.id
+        ).first()
+        if existiert:
+            raise HTTPException(status_code=400, detail="E-Mail bereits vergeben")
+        current_user.email = daten['email']
+    
+    db.commit()
+    db.refresh(current_user)
+    return current_user
+
+
+
+@app.get("/migrate-rabatt")
+def migrate_rabatt():
+    from database import engine
+    from sqlalchemy import text, inspect
+    try:
+        inspector = inspect(engine)
+        existing_columns = [col['name'] for col in inspector.get_columns('produkte')]
+        with engine.connect() as conn:
+            if 'originalpreis' not in existing_columns:
+                conn.execute(text("ALTER TABLE produkte ADD COLUMN originalpreis FLOAT;"))
+            if 'rabatt_prozent' not in existing_columns:
+                conn.execute(text("ALTER TABLE produkte ADD COLUMN rabatt_prozent INTEGER;"))
+            conn.commit()
+        return {"message": "Migration erfolgreich! Rabatt-Felder hinzugefügt."}
+    except Exception as e:
+        return {"error": str(e)}
+
 
 if __name__ == "__main__":
     import uvicorn

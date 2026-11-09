@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin-Bereich - TechStore</title>
+    <title>Admin - Casa do Livro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
@@ -11,111 +11,114 @@
 </head>
 <body>
 
-    <!-- HEADER -->
-    <header>
-    <div class="header-container">
-        <!-- Hamburger Button (nur auf Handy sichtbar) -->
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+    <!-- HEADER (Kopie von index.html) -->
+    <header class="site-header">
+        <div class="top-bar">
+            <div class="top-inner">
+                <div class="top-links">
+                    <a href="index.html">Zurück zum Shop</a>
+                    <a href="#" onclick="logout()">Abmelden</a>
+                </div>                
+            </div>
+        </div>
 
-        <a href="index.html" class="logo">
-            <img src="bilder/logo.png" alt="TechStore Logo">
-        </a>
-
-                <nav id="mainNav">
-            <!-- Schließen-Button: Ganz oben links im Menü -->
-            <button class="close-menu-btn" onclick="toggleMobileMenu()">✕</button>
-                <div class="suchleiste">
-                    <input type="text" id="suchInput" placeholder="🔍 Durchsuche TechTohfa" autocomplete="off">
-                    <button onclick="sucheAusfuehrenGlobal()">Suchen</button>
-                </div>
-                <ul>
-                    <li><a href="index.html">🏠 Produkte</a></li>
-                    <li><a href="warenkorb.html" class="cart-icon">
-                            <span class="cart-count" id="cartCount">0</span>
-                            🛒 Warenkorb
-                        </a></li>
-                    <li id="loginLink"><a href="login.html">Anmelden</a></li>
-                    <li id="userMenu" style="display:none; position:relative;">
-                        <a href="#" id="userName" onclick="toggleDropdown(event)">👤 <span id="userNameText">Benutzer</span> ▾</a>
-                        <div id="userDropdown" class="user-dropdown">
-                            <a href="profil.html">👤 Mein Konto</a>
-                            <a href="bestellungen.html">📦 Meine Bestellungen</a>
-                            
-                            <a href="#" onclick="logout()">🚪 Abmelden</a>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
+        <div class="header-main" style="display: flex; justify-content: space-between; align-items: center; padding: 20px;">
+            <a href="index.html" class="logo">
+                <img src="bilder/logo.png" alt="Casa do Livro Logo" style="height: 80px; width: auto;">
+            </a>
+            <div style="font-size: 24px; color: var(--primary-color); font-weight: 700; font-family: 'Montserrat', sans-serif;">
+                Admin-Bereich
+            </div>
         </div>
     </header>
 
     <!-- MAIN -->
     <main class="container">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h1>Admin-Bereich</h1>
-            <button class="btn btn-primary" onclick="oeffneProduktModal()">+ Neues Produkt</button>
+        <h2>Neues Buch anlegen</h2>
+        
+        <div class="form-box" style="max-width: 900px; margin-top: 20px;">
+            <form id="buchForm">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    
+                    <!-- Linke Spalte -->
+                    <div>
+                        <div class="form-group">
+                            <label for="name">Buchtitel *</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="autor">Autor</label>
+                            <input type="text" id="autor">
+                        </div>
+                        <div class="form-group">
+                            <label for="isbn">ISBN</label>
+                            <input type="text" id="isbn">
+                        </div>
+                        <div class="form-group">
+                            <label for="verlag">Verlag</label>
+                            <input type="text" id="verlag">
+                        </div>
+                    </div>
+
+                    <!-- Rechte Spalte -->
+                    <div>
+                        <div class="form-group">
+                            <label for="erscheinungsjahr">Erscheinungsjahr</label>
+                            <input type="number" id="erscheinungsjahr">
+                        </div>
+                        <div class="form-group">
+                            <label for="preis">Preis (€) *</label>
+                            <input type="number" step="0.01" id="preis" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lagerbestand">Lagerbestand *</label>
+                            <input type="number" id="lagerbestand" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bild_url">Bild-URL (z.B. bilder/buch1.jpg)</label>
+                            <input type="text" id="bild_url">
+                        </div>
+                        <div class="form-group">
+                            <label for="rabatt_prozent">Rabatt in % (optional)</label>
+                            <input type="number" id="rabatt_prozent" min="0" max="100">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="beschreibung">Beschreibung</label>
+                    <textarea id="beschreibung" rows="4" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Roboto Condensed';"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="kategorie">Kategorie *</label>
+                    <select id="kategorie" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="">Bitte wählen...</option>
+                        <!-- Wird per JS gefüllt -->
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Buch anlegen</button>
+            </form>
         </div>
-        
-        <p style="color:#888; margin-top:5px;">Produkte verwalten (anlegen, bearbeiten, löschen)</p>
-        
-        <div id="adminInhalt" style="margin-top:30px;">
-            <!-- Wird per JavaScript gefüllt -->
+
+        <hr style="margin: 40px 0; border: 0; border-top: 1px solid #eee;">
+
+        <h2>Alle Bücher verwalten</h2>
+                        
+        <!-- NEU: Suchfeld für den Admin-Bereich -->
+        <div style="margin: 15px 0;">
+            <input type="text" id="adminSuchInput" placeholder="Suche nach Titel, Autor oder ISBN..." 
+                   style="width: 100%; max-width: 500px; padding: 12px 15px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; font-family: 'Roboto Condensed';">
+        </div>
+
+        <div id="adminProduktListe">
+            <!-- Wird per JS gefüllt -->
         </div>
     </main>
 
-    <!-- MODAL -->
-    <div id="produktModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
-        <div style="background:white; border-radius:8px; padding:30px; max-width:500px; width:90%; max-height:90vh; overflow-y:auto;">
-            <h2 id="modalTitel" style="margin-bottom:20px;">Neues Produkt</h2>
-            
-            <form id="produktForm" onsubmit="speichereProdukt(event)">
-                <input type="hidden" id="produktId">
-                
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" required placeholder="z. B. Gaming Maus">
-                </div>
-                
-                <div class="form-group">
-                    <label for="beschreibung">Beschreibung</label>
-                    <input type="text" id="beschreibung" placeholder="z. B. RGB-Beleuchtung, 16000 DPI">
-                </div>
-                
-                <div class="form-group">
-                    <label for="preis">Preis (€)</label>
-                    <input type="number" id="preis" step="0.01" min="0" required placeholder="49.99">
-                </div>
-                
-                <div class="form-group">
-                    <label for="lagerbestand">Lagerbestand</label>
-                    <input type="number" id="lagerbestand" min="0" required placeholder="25">
-                </div>
-                
-                <div class="form-group">
-                    <label for="bild_url">Bild-URL</label>
-                    <input type="text" id="bild_url" placeholder="bilder/gm1.png">
-                </div>
-                
-                <div class="form-group">
-                    <label for="kategorie_id">Kategorie</label>
-                    <select id="kategorie_id" required style="width:100%; padding:12px 15px; font-size:15px; border:1px solid #ddd; border-radius:4px;">
-                        <!-- Wird per JavaScript gefüllt -->
-                    </select>
-                </div>
-                
-                <div style="display:flex; gap:10px; margin-top:20px;">
-                    <button type="submit" class="btn btn-primary" style="flex:1;">Speichern</button>
-                    <button type="button" class="btn" onclick="schliesseProduktModal()" style="flex:1;">Abbrechen</button>
-                </div>
-                
-                <p id="modalMessage" style="margin-top:15px; text-align:center;"></p>
-            </form>
-        </div>
-    </div>
-
-    <!-- FOOTER -->
     <footer>
-        &copy; 2026 TechStore - Alle Rechte vorbehalten
+        &copy; 2026 Casa do Livro - Alle Rechte vorbehalten
     </footer>
 
     <script src="js/api.js"></script>

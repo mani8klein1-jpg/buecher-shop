@@ -3,8 +3,7 @@
 // ========================================
 // Diese Datei kümmert sich um die Kommunikation
 // mit dem Backend.
-
-const API_URL = 'https://techtohfa-backend.onrender.com';
+const API_BASE_URL = "https://casalivr.uber.space";
 // ========================================
 // TOKEN-VERWALTUNG
 // ========================================
@@ -31,19 +30,19 @@ function isLoggedIn() {
 
 // Alle Produkte abrufen
 async function getProdukte() {
-    const response = await fetch(`${API_URL}/produkte`);
+    const response = await fetch(`${API_BASE_URL}/produkte`);
     return await response.json();
 }
 
 // Einzelnes Produkt abrufen
 async function getProdukt(id) {
-    const response = await fetch(`${API_URL}/produkte/${id}`);
+    const response = await fetch(`${API_BASE_URL}/produkte/${id}`);
     return await response.json();
 }
 
 // Warenkorb abrufen
 async function getWarenkorb() {
-    const response = await fetch(`${API_URL}/warenkorb`, {
+    const response = await fetch(`${API_BASE_URL}/warenkorb`, {
         headers: { 'Authorization': `Bearer ${getToken()}` }
     });
     if (!response.ok) throw new Error('Nicht eingeloggt');
@@ -51,22 +50,26 @@ async function getWarenkorb() {
 }
 
 // Produkt in den Warenkorb legen
-async function addToWarenkorb(produktId, menge = 1) {
-    const response = await fetch(`${API_URL}/warenkorb`, {
+async function addWarenkorb(produktId, menge) {
+    const token = getToken();
+    const response = await fetch(`${API_BASE_URL}/warenkorb`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getToken()}`
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ produkt_id: produktId, menge: menge })
     });
-    if (!response.ok) throw new Error('Fehler beim Hinzufügen');
+    
+    if (!response.ok) {
+        throw new Error('Fehler beim Hinzufügen zum Warenkorb');
+    }
     return await response.json();
 }
 
 // Produkt aus dem Warenkorb entfernen
 async function removeFromWarenkorb(eintragId) {
-    const response = await fetch(`${API_URL}/warenkorb/${eintragId}`, {
+    const response = await fetch(`${API_BASE_URL}/warenkorb/${eintragId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${getToken()}` }
     });
@@ -74,11 +77,16 @@ async function removeFromWarenkorb(eintragId) {
     return await response.json();
 }
 
+
 // Bestellung aufgeben
-async function createBestellung() {
-    const response = await fetch(`${API_URL}/bestellungen`, {
+async function createBestellung(adresse) {
+    const response = await fetch(`${API_BASE_URL}/bestellungen`, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${getToken()}` }
+        headers: { 
+            'Content-Type': 'application/json', // Wichtig: Wir senden JSON
+            'Authorization': `Bearer ${getToken()}` 
+        },
+        body: JSON.stringify(adresse) // Hier werden die Adressdaten mitgeschickt
     });
     if (!response.ok) throw new Error('Fehler beim Bestellen');
     return await response.json();
@@ -90,7 +98,7 @@ async function login(email, passwort) {
     formData.append('username', email);
     formData.append('password', passwort);
     
-    const response = await fetch(`${API_URL}/login`, {
+    const response = await fetch(`${API_BASE_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: formData
@@ -101,7 +109,7 @@ async function login(email, passwort) {
 
 // Registrieren
 async function registrieren(name, email, passwort) {
-    const response = await fetch(`${API_URL}/registrieren`, {
+    const response = await fetch(`${API_BASE_URL}/registrieren`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, passwort })
@@ -112,7 +120,7 @@ async function registrieren(name, email, passwort) {
 
 // Alle Bestellungen des Benutzers abrufen
 async function getBestellungen() {
-    const response = await fetch(`${API_URL}/bestellungen`, {
+    const response = await fetch(`${API_BASE_URL}/bestellungen`, {
         headers: { 'Authorization': `Bearer ${getToken()}` }
     });
     if (!response.ok) throw new Error('Nicht eingeloggt');
@@ -121,7 +129,7 @@ async function getBestellungen() {
 
 // Einzelne Bestellung abrufen (mit Positionen)
 async function getBestellung(bestellungId) {
-    const response = await fetch(`${API_URL}/bestellungen/${bestellungId}`, {
+    const response = await fetch(`${API_BASE_URL}/bestellungen/${bestellungId}`, {
         headers: { 'Authorization': `Bearer ${getToken()}` }
     });
     if (!response.ok) throw new Error('Bestellung nicht gefunden');
@@ -130,7 +138,7 @@ async function getBestellung(bestellungId) {
 
 // Aktuellen Benutzer abrufen
 async function getBenutzer() {
-    const response = await fetch(`${API_URL}/benutzer/ich`, {
+    const response = await fetch(`${API_BASE_URL}/benutzer/ich`, {
         headers: { 'Authorization': `Bearer ${getToken()}` }
     });
     if (!response.ok) throw new Error('Nicht eingeloggt');
@@ -139,25 +147,11 @@ async function getBenutzer() {
 
 // Alle Kategorien abrufen
 async function getKategorien() {
-    const response = await fetch(`${API_URL}/kategorien`);
+    const response = await fetch(`${API_BASE_URL}/kategorien`);
     if (!response.ok) throw new Error('Fehler beim Laden der Kategorien');
     return await response.json();
 }
 
-// Menge eines Warenkorb-Eintrags ändern
-async function updateWarenkorbMenge(eintragId, menge) {
-    const response = await fetch(`${API_URL}/warenkorb/${eintragId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getToken()}`
-        },
-        body: JSON.stringify({ menge: menge })
-    });
-
-    if (!response.ok) throw new Error('Fehler beim Ändern der Menge');
-    return await response.json();
-}
 
 // Produkte suchen
 async function sucheProdukte(query) {
@@ -203,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Bestellung löschen
 async function deleteBestellung(bestellungId) {
-    const response = await fetch(`${API_URL}/bestellungen/${bestellungId}`, {
+    const response = await fetch(`${API_BASE_URL}/bestellungen/${bestellungId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${getToken()}` }
     });
@@ -217,7 +211,7 @@ async function deleteBestellung(bestellungId) {
 
 // Produkt anlegen (nur Admin)
 async function createProdukt(daten) {
-    const response = await fetch(`${API_URL}/produkte`, {
+    const response = await fetch(`${API_BASE_URL}/produkte`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -234,7 +228,7 @@ async function createProdukt(daten) {
 
 // Produkt aktualisieren (nur Admin)
 async function updateProdukt(produktId, daten) {
-    const response = await fetch(`${API_URL}/produkte/${produktId}`, {
+    const response = await fetch(`${API_BASE_URL}/produkte/${produktId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -251,7 +245,7 @@ async function updateProdukt(produktId, daten) {
 
 // Produkt löschen (nur Admin)
 async function deleteProdukt(produktId) {
-    const response = await fetch(`${API_URL}/produkte/${produktId}`, {
+    const response = await fetch(`${API_BASE_URL}/produkte/${produktId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${getToken()}` }
     });
@@ -351,6 +345,115 @@ function startSpeech() {
         
         if (suchInput) suchInput.placeholder = '🔍 Produkte suchen...';
     };
+
+    
     
     recognition.start();
+}
+
+// Menge im Warenkorb ändern
+async function updateWarenkorb(eintragId, neueMenge) {
+    const token = getToken();
+    const response = await fetch(`${API_BASE_URL}/warenkorb/${eintragId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ menge: neueMenge })
+    });
+    if (!response.ok) throw new Error('Fehler beim Ändern der Menge');
+    return await response.json();
+}
+
+// Artikel aus dem Warenkorb löschen
+async function deleteWarenkorb(eintragId) {
+    const token = getToken();
+    const response = await fetch(`${API_BASE_URL}/warenkorb/${eintragId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (!response.ok) throw new Error('Fehler beim Löschen');
+    return await response.json();
+}
+
+
+
+
+// Wunschliste abrufen
+async function getWunschliste() {
+    const response = await fetch(`${API_BASE_URL}/wunschliste`, {
+        headers: { 'Authorization': `Bearer ${getToken()}` }
+    });
+    if (!response.ok) throw new Error('Nicht eingeloggt');
+    return await response.json();
+}
+
+// Zur Wunschliste hinzufügen
+async function addWunschliste(produktId) {
+    const response = await fetch(`${API_BASE_URL}/wunschliste`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getToken()}`
+        },
+        body: JSON.stringify({ produkt_id: produktId })
+    });
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.detail || 'Fehler beim Hinzufügen');
+    }
+    return await response.json();
+}
+
+// Von Wunschliste entfernen
+async function deleteWunschliste(eintragId) {
+    const response = await fetch(`${API_BASE_URL}/wunschliste/${eintragId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${getToken()}` }
+    });
+    if (!response.ok) throw new Error('Fehler beim Entfernen');
+    return await response.json();
+}
+
+// Rechnungsadresse abrufen
+async function getRechnungsadresse() {
+    const response = await fetch(`${API_BASE_URL}/benutzer/rechnungsadresse`, {
+        headers: { 'Authorization': `Bearer ${getToken()}` }
+    });
+    if (!response.ok) throw new Error('Nicht eingeloggt');
+    return await response.json();
+}
+
+// Rechnungsadresse speichern
+async function updateRechnungsadresse(daten) {
+    const response = await fetch(`${API_BASE_URL}/benutzer/rechnungsadresse`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getToken()}`
+        },
+        body: JSON.stringify(daten)
+    });
+    if (!response.ok) throw new Error('Fehler beim Speichern');
+    return await response.json();
+}
+
+
+async function updateBenutzer(daten) {
+    const response = await fetch(`${API_BASE_URL}/benutzer/ich`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getToken()}`
+        },
+        body: JSON.stringify(daten)
+    });
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.detail || 'Fehler beim Aktualisieren');
+    }
+    return await response.json();
 }

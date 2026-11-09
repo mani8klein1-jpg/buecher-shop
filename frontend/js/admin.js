@@ -2,307 +2,203 @@
 // ADMIN-BEREICH
 // ========================================
 
-let aktuelleProdukte = [];
-let aktuelleKategorien = [];
+let bearbeitungsModus = false;
+let alleAdminProdukte = [];
+let zuBearbeitendeId = null;
 
 document.addEventListener('DOMContentLoaded', async function() {
-    
-    // Prüfen, ob eingeloggt + Admin
+    // 1. Prüfen, ob der Benutzer eingeloggt und Admin ist
     if (!isLoggedIn()) {
-        window.location.href = 'login.html';
+        window.location.href = "login.html";
         return;
     }
-    
+
     try {
         const benutzer = await getBenutzer();
-        
-        // Prüfen, ob Admin
         if (!benutzer.ist_admin) {
-            alert('Zugriff verweigert. Nur Admins dürfen diese Seite aufrufen.');
-            window.location.href = 'index.html';
+            alert("Kein Zugriff. Du bist kein Admin.");
+            window.location.href = "index.html";
             return;
         }
-        
-        // Admin-Link im Dropdown anzeigen
-        const adminLink = document.getElementById('adminLink');
-        if (adminLink) adminLink.style.display = 'block';
-        
-        // Login-Status aktualisieren
-        await updateLoginStatus();
-        await updateCartCount();
-        
-        // Produkte + Kategorien laden
-        await ladeAlles();
-        
     } catch (error) {
-        console.error('Fehler:', error);
-        window.location.href = 'login.html';
+        window.location.href = "login.html";
+        return;
     }
+
+    // 2. Kategorien laden
+    await ladeKategorienInsDropdown();
+
+    // 3. Bücher laden
+    await ladeAdminProdukte();
+
+    // 4. Formular absenden
+    document.getElementById('buchForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const neuesBuch = {
+            name: document.getElementById('name').value,
+            autor: document.getElementById('autor').value,
+            isbn: document.getElementById('isbn').value,
+            verlag: document.getElementById('verlag').value,
+            erscheinungsjahr: parseInt(document.getElementById('erscheinungsjahr').value) || null,
+            preis: parseFloat(document.getElementById('preis').value),
+            lagerbestand: parseInt(document.getElementById('lagerbestand').value),
+            beschreibung: document.getElementById('beschreibung').value,
+            bild_url: document.getElementById('bild_url').value,
+            kategorie_id: parseInt(document.getElementById('kategorie').value),
+            rabatt_prozent: parseInt(document.getElementById('rabatt_prozent').value) || null
+        };
+
+        try {
+            if (bearbeitungsModus && zuBearbeitendeId) {
+                await updateProdukt(zuBearbeitendeId, neuesBuch);
+                alert("Buch erfolgreich aktualisiert!");
+                bearbeitungsModus = false;
+                zuBearbeitendeId = null;
+                document.querySelector('#buchForm button[type="submit"]').textContent = 'Buch anlegen';
+            } else {
+                await createProdukt(neuesBuch);
+                alert("Buch erfolgreich angelegt!");
+            }
+            document.getElementById('buchForm').reset();
+            await ladeAdminProdukte();
+        } catch (error) {
+            console.error("Fehler beim Speichern:", error);
+            alert("Fehler beim Speichern des Buches.");
+        }
+    });
 });
 
-// ========================================
-// ALLES LADEN
-// ========================================
-
-async function ladeAlles() {
+async function ladeKategorienInsDropdown() {
     try {
-        aktuelleProdukte = await getProdukte();
-        aktuelleKategorien = await getKategorien();
+        const kategorien = await getKategorien();
+        const select = document.getElementById('kategorie');
         
-        zeigeProdukteAdmin();
-        fuelleKategorieDropdown();
-        
+        kategorien.forEach(kat => {
+            const option = document.createElement('option');
+            option.value = kat.id;
+            option.textContent = kat.name;
+            select.appendChild(option);
+        });
     } catch (error) {
-        console.error('Fehler beim Laden:', error);
-        document.getElementById('adminInhalt').innerHTML = `
-            <p style="color:#e94560;">Fehler beim Laden der Produkte.</p>
-        `;
+        console.error("Fehler beim Laden der Kategorien:", error);
     }
 }
 
-// ========================================
-// PRODUKTE ANZEIGEN
-// ========================================
+async function ladeAdminProdukte() {
+    const liste = document.getElementById('adminProduktListe');
+    liste.innerHTML = '<p>Lade Bücher...</p>';
 
-function zeigeProdukteAdmin() {
-    const container = document.getElementById('adminInhalt');
-    
-    if (aktuelleProdukte.length === 0) {
-        container.innerHTML = `
-            <p style="color:#888;">Noch keine Produkte vorhanden.</p>
-        `;
+    try {
+        // 1. Produkte vom Backend laden und in der globalen Variable speichern
+        alleAdminProdukte = await getProdukte();
+        
+        // 2. Die neue Anzeige-Funktion aufrufen (die baut die Liste auf)
+        zeigeAdminProdukte(alleAdminProdukte);
+        
+    } catch (error) {
+        console.error("Fehler beim Laden der Produkte:", error);
+        liste.innerHTML = '<p>Fehler beim Laden der Bücher.</p>';
+    }
+}
+
+function zeigeAdminProdukte(produkte) {
+    const liste = document.getElementById('adminProduktListe');
+    liste.innerHTML = '';
+
+    if (produkte.length === 0) {
+        liste.innerHTML = '<p>Keine Bücher gefunden.</p>';
         return;
     }
-    
-    let html = '';
-    
-    aktuelleProdukte.forEach(produkt => {
-        // Kategorie-Name finden
-        const kategorie = aktuelleKategorien.find(k => k.id === produkt.kategorie_id);
-        const kategorieName = kategorie ? kategorie.name : '–';
+
+    produkte.forEach(produkt => {
+        const item = document.createElement('div');
+        item.className = 'admin-produkt';
         
-        html += `
-            <div class="admin-produkt">
-                <img src="${produkt.bild_url || 'https://via.placeholder.com/80x80'}" 
-                     alt="${produkt.name}" 
-                     class="admin-produkt-img">
-                
+            item.innerHTML = `
+                <img src="${produkt.bild_url || 'https://via.placeholder.com/80'}" alt="${produkt.name}" class="admin-produkt-img">
                 <div class="admin-produkt-info">
-                    <h3>${produkt.name}</h3>
-                    <p class="admin-produkt-beschreibung">${produkt.beschreibung || ''}</p>
+                    <h3>${produkt.name} <span style="font-size: 12px; color: #888;">(ID: ${produkt.id})</span></h3>
+                    <p class="admin-produkt-beschreibung">${produkt.autor || 'Unbekannter Autor'}</p>
                     <p class="admin-produkt-details">
-                        <strong>${produkt.preis.toFixed(2).replace('.', ',')} €</strong>
-                        · ${produkt.lagerbestand} auf Lager
-                        · ${kategorieName}
+                        <strong>${produkt.preis.toFixed(2).replace('.', ',')} €</strong> | 
+                        Bestand: ${produkt.lagerbestand} | 
+                        ISBN: ${produkt.isbn || '-'}
+                        ${produkt.rabatt_prozent ? `| <span style="color: #4caf50; font-weight: bold; white-space: nowrap;">${produkt.rabatt_prozent} % Rabatt</span>` : ''}
                     </p>
                 </div>
-                
                 <div class="admin-produkt-actions">
-                    <button class="btn" onclick="bearbeiteProdukt(${produkt.id})" 
-                            style="background:#2196f3; padding:8px 14px; font-size:13px;">
-                        ✏️ Bearbeiten
-                    </button>
-                    <button class="btn" onclick="loescheProdukt(${produkt.id}, '${produkt.name.replace(/'/g, "\\'")}')" 
-                            style="background:#e94560; padding:8px 14px; font-size:13px;">
-                        🗑 Löschen
-                    </button>
+                    <button class="btn" onclick="bearbeiteProdukt(${produkt.id})" style="background-color: #0d47a1; margin-right: 5px;">Bearbeiten</button>
+                    <button class="btn" onclick="loescheProdukt(${produkt.id})" style="background-color: #d32f2f;">Löschen</button>
                 </div>
-            </div>
-        `;
+            `;
+        
+        liste.appendChild(item);
     });
-    
-    container.innerHTML = html;
 }
 
-// ========================================
-// KATEGORIE-DROPDOWN FÜLLEN
-// ========================================
-
-function fuelleKategorieDropdown() {
-    const select = document.getElementById('kategorie_id');
-    if (!select) return;
-    
-    let html = '';
-    aktuelleKategorien.forEach(kat => {
-        html += `<option value="${kat.id}">${kat.name}</option>`;
-    });
-    
-    select.innerHTML = html;
-}
-
-// ========================================
-// MODAL ÖFFNEN (NEU)
-// ========================================
-
-function oeffneProduktModal() {
-    document.getElementById('produktId').value = '';
-    document.getElementById('modalTitel').textContent = 'Neues Produkt';
-    document.getElementById('produktForm').reset();
-    document.getElementById('modalMessage').textContent = '';
-    
-    // Standard-Kategorie auswählen
-    if (aktuelleKategorien.length > 0) {
-        document.getElementById('kategorie_id').value = aktuelleKategorien[0].id;
-    }
-    
-    document.getElementById('produktModal').style.display = 'flex';
-}
-
-// ========================================
-// MODAL ÖFFNEN (BEARBEITEN)
-// ========================================
-
-function bearbeiteProdukt(produktId) {
-    const produkt = aktuelleProdukte.find(p => p.id === produktId);
-    if (!produkt) return;
-    
-    document.getElementById('produktId').value = produkt.id;
-    document.getElementById('modalTitel').textContent = 'Produkt bearbeiten';
-    document.getElementById('name').value = produkt.name;
-    document.getElementById('beschreibung').value = produkt.beschreibung || '';
-    document.getElementById('preis').value = produkt.preis;
-    document.getElementById('lagerbestand').value = produkt.lagerbestand;
-    document.getElementById('bild_url').value = produkt.bild_url || '';
-    document.getElementById('kategorie_id').value = produkt.kategorie_id || '';
-    document.getElementById('modalMessage').textContent = '';
-    
-    document.getElementById('produktModal').style.display = 'flex';
-}
-
-// ========================================
-// MODAL SCHLIESSEN
-// ========================================
-
-function schliesseProduktModal() {
-    document.getElementById('produktModal').style.display = 'none';
-}
-
-// ========================================
-// PRODUKT SPEICHERN (NEU ODER BEARBEITEN)
-// ========================================
-
-async function speichereProdukt(event) {
-    event.preventDefault();
-    
-    const produktId = document.getElementById('produktId').value;
-    const message = document.getElementById('modalMessage');
-    
-    const daten = {
-        name: document.getElementById('name').value.trim(),
-        beschreibung: document.getElementById('beschreibung').value.trim(),
-        preis: parseFloat(document.getElementById('preis').value),
-        lagerbestand: parseInt(document.getElementById('lagerbestand').value),
-        bild_url: document.getElementById('bild_url').value.trim(),
-        kategorie_id: parseInt(document.getElementById('kategorie_id').value)
-    };
-    
-    // Validierung
-    if (!daten.name || isNaN(daten.preis) || isNaN(daten.lagerbestand)) {
-        message.textContent = '✗ Bitte alle Pflichtfelder ausfüllen.';
-        message.style.color = '#e94560';
-        return;
-    }
-    
+async function bearbeiteProdukt(id) {
     try {
-        if (produktId) {
-            // Bearbeiten
-            await updateProdukt(produktId, daten);
-            message.textContent = '✓ Produkt aktualisiert!';
-        } else {
-            // Neu anlegen
-            await createProdukt(daten);
-            message.textContent = '✓ Produkt angelegt!';
-        }
+        const produkt = await getProdukt(id);
         
-        message.style.color = '#4caf50';
-        
-        // Nach 1 Sekunde schließen + neu laden
-        setTimeout(async () => {
-            schliesseProduktModal();
-            await ladeAlles();
-        }, 1000);
-        
+        document.getElementById('name').value = produkt.name;
+        document.getElementById('autor').value = produkt.autor || '';
+        document.getElementById('isbn').value = produkt.isbn || '';
+        document.getElementById('verlag').value = produkt.verlag || '';
+        document.getElementById('erscheinungsjahr').value = produkt.erscheinungsjahr || '';
+        document.getElementById('preis').value = produkt.preis;
+        document.getElementById('lagerbestand').value = produkt.lagerbestand;
+        document.getElementById('bild_url').value = produkt.bild_url || '';
+        document.getElementById('beschreibung').value = produkt.beschreibung || '';
+        document.getElementById('kategorie').value = produkt.kategorie_id;
+        document.getElementById('originalpreis').value = produkt.originalpreis || '';
+        document.getElementById('rabatt_prozent').value = produkt.rabatt_prozent || '';
+
+        bearbeitungsModus = true;
+        zuBearbeitendeId = id;
+
+        document.querySelector('#buchForm button[type="submit"]').textContent = 'Änderungen speichern';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
     } catch (error) {
-        message.textContent = '✗ Fehler: ' + error.message;
-        message.style.color = '#e94560';
-        console.error('Fehler:', error);
+        console.error("Fehler beim Laden des Produkts:", error);
+        alert("Produkt konnte nicht geladen werden.");
     }
 }
 
-// ========================================
-// PRODUKT LÖSCHEN
-// ========================================
+async function loescheProdukt(id) {
+    if (!confirm("Möchtest du dieses Buch wirklich löschen?")) return;
 
-async function loescheProdukt(produktId, name) {
-    if (!confirm(`Produkt "${name}" wirklich löschen?\n\nAchtung: Das Produkt wird aus allen Warenkörben entfernt!`)) {
-        return;
-    }
-    
     try {
-        await deleteProdukt(produktId);
-        await ladeAlles();
+        await deleteProdukt(id);
+        alert("Buch gelöscht.");
+        await ladeAdminProdukte();
     } catch (error) {
-        alert('Fehler beim Löschen: ' + error.message);
+        console.error("Fehler beim Löschen:", error);
+        alert("Fehler beim Löschen des Buches.");
     }
 }
 
 // ========================================
-// HILFSFUNKTIONEN
+// SUCHE IM ADMIN-BEREICH
 // ========================================
 
-async function updateLoginStatus() {
-    const loginLink = document.getElementById('loginLink');
-    const userMenu = document.getElementById('userMenu');
-    
-    if (isLoggedIn()) {
-        loginLink.style.display = 'none';
-        userMenu.style.display = 'block';
-        
-        try {
-            const benutzer = await getBenutzer();
-            document.getElementById('userNameText').textContent = benutzer.name;
+document.addEventListener('DOMContentLoaded', function() {
+    const suchInput = document.getElementById('adminSuchInput');
+    if (suchInput) {
+        suchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
             
-            // Admin-Link anzeigen
-            if (benutzer.ist_admin) {
-                const adminLink = document.getElementById('adminLink');
-                if (adminLink) adminLink.style.display = 'block';
+            if (query === '') {
+                zeigeAdminProdukte(alleAdminProdukte);
+            } else {
+                const gefiltert = alleAdminProdukte.filter(p => 
+                    p.name.toLowerCase().includes(query) || 
+                    (p.autor && p.autor.toLowerCase().includes(query)) ||
+                    (p.isbn && p.isbn.includes(query))
+                );
+                zeigeAdminProdukte(gefiltert);
             }
-        } catch (error) {
-            document.getElementById('userNameText').textContent = 'Benutzer';
-        }
-    } else {
-        loginLink.style.display = 'block';
-        userMenu.style.display = 'none';
-    }
-}
-
-function toggleDropdown(event) {
-    event.preventDefault();
-    const dropdown = document.getElementById('userDropdown');
-    dropdown.classList.toggle('show');
-}
-
-document.addEventListener('click', function(event) {
-    const userMenu = document.getElementById('userMenu');
-    const dropdown = document.getElementById('userDropdown');
-    if (userMenu && dropdown && !userMenu.contains(event.target)) {
-        dropdown.classList.remove('show');
+        });
     }
 });
-
-function logout() {
-    removeToken();
-    window.location.href = 'index.html';
-}
-
-async function updateCartCount() {
-    if (!isLoggedIn()) return;
-    
-    try {
-        const warenkorb = await getWarenkorb();
-        const count = warenkorb.reduce((sum, item) => sum + item.menge, 0);
-        document.getElementById('cartCount').textContent = count;
-    } catch (error) {
-        console.error('Fehler:', error);
-    }
-}
