@@ -2919,13 +2919,18 @@ body {
 }--- */
 .hilfe-suche {
     margin: -30px auto 50px auto; 
-    max-width: 800px;
+    max-width: 1000px; /* GEÄNDERT: Von 800px auf 1000px */
     position: relative;
     z-index: 10;
     
-    /* NEU: Das erzeugt die graue Linie */
+    /* Die graue Linie */
     border-bottom: 1px solid #dcdcdc; 
-    padding-bottom: 40px; /* Abstand zwischen Linie und den Icons darunter */
+    padding-bottom: 40px; 
+    
+    /* WICHTIG: Damit die Kante exakt auf der roten Linie ist, 
+       entfernen wir hier das padding links/rechts (falls vorhanden) */
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .such-wrapper {
@@ -2961,21 +2966,15 @@ body {
 /* --- 3. Die Kategorien (Gitter-Layout) --- */
 .hilfe-kategorien {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Automatische Spalten */
-    gap: 40px; /* Abstand zwischen den Kacheln */
-    padding: 20px 0;
-    text-align: center;
+    grid-template-columns: repeat(4, 1fr); /* 4 Spalten */
+    gap: 20px;
+    
+    /* NEU: Breite und Zentrierung exakt wie beim Suchfeld */
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0; 
 }
 
-.kategorie-karte {
-    padding: 20px;
-    transition: transform 0.2s;
-    cursor: pointer;
-}
-
-.kategorie-karte:hover {
-    transform: translateY(-5px); /* Kleiner Hover-Effekt */
-}
 
 .kategorie-karte .icon {
     font-size: 3rem;
@@ -3026,4 +3025,261 @@ body {
     line-height: normal;
     white-space: normal; /* Erlaubt Umbruch, falls der Text zu lang ist */
     clear: both; /* Verhindert, dass es von anderen Elementen beeinflusst wird */
+}
+
+
+/* Styling für die klickbaren Kategorie-Karten */
+.kategorie-karte {
+    text-decoration: none; /* Entfernt die Unterstreichung von Links */
+    color: inherit;        /* Nimmt die Textfarbe des Elternelements an */
+    display: block;        /* Sorgt dafür, dass der Link die ganze Kachel ausfüllt */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Für einen schönen Hover-Effekt */
+}
+
+/* Kleiner Hover-Effekt, damit der Nutzer merkt, dass es klickbar ist */
+.kategorie-karte:hover {
+    transform: translateY(-5px); /* Karte hebt sich leicht an */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1); /* Schatten wird stärker */
+}
+
+
+/* --- Styling für die Detail-Seiten des Hilfezentrums --- */
+.hilfe-detail {
+    max-width: 800px;
+    margin: 40px auto; /* Zentriert den Inhalt und lässt Abstand oben/unten */
+    padding: 0 20px;
+}
+
+.detail-box {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.detail-box h2 {
+    color: #007bff; /* Passe diese Farbe an deine Markenfarbe an */
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.detail-box h3 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.detail-box p, .detail-box li {
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.detail-box ul {
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+.btn-zurueck {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 12px 24px;
+    background-color: #f0f0f0;
+    color: #333;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.btn-zurueck:hover {
+    background-color: #e0e0e0;
+}
+
+
+
+
+/* --- Layout für das Hilfezentrum (Sidebar + Inhalt) --- */
+.hilfe-layout {
+    display: flex;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0; /* Wichtig: Kein Padding, damit es bündig ist */
+    gap: 40px;
+}
+
+/* Die linke Menüleiste */
+.hilfe-sidebar {
+    width: 250px;
+    flex-shrink: 0;
+}
+
+.hilfe-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #e0e0e0;
+     background-color: #ffffff;
+}
+
+.hilfe-sidebar li {
+    border-bottom: 1px solid #f7f5f5;
+}
+
+.hilfe-sidebar li:last-child {
+    border-bottom: none;
+}
+
+.hilfe-sidebar a {
+    display: block;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.hilfe-sidebar a:hover {
+    background-color: #f5f5f5;
+}
+
+/* Der aktive Menüpunkt (Kontakt) */
+.hilfe-sidebar li.active a {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+
+
+/* Der rechte Inhaltsbereich */
+.hilfe-content {
+    flex-grow: 1;
+}
+
+.hilfe-content h2 {
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.hilfe-content h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.contact-grid {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.contact-col {
+    flex: 1;
+}
+
+.hilfe-content a {
+    color: #333;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.hilfe-content a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive: Auf dem Handy untereinander */
+@media (max-width: 768px) {
+    .hilfe-layout {
+        flex-direction: column;
+    }
+    .hilfe-sidebar {
+        width: 100%;
+    }
+}
+
+
+
+/* Container für den Link, damit er bündig mit dem Suchfeld ist */
+.top-zurueck-wrapper {
+    max-width: 1000px; /* Gleiche Breite wie Suchfeld und Layout */
+    margin: -20px auto 20px auto; /* Etwas nach oben ziehen (unter den Strich) */
+    padding: 0;
+    text-align: left;
+}
+
+/* Der Link selbst (ganz schlicht) */
+.link-zurueck {
+    color: #666; /* Dezentes Grau */
+    text-decoration: none;
+    font-size: 12px; /* Schöne, kleine Schrift */
+    display: inline-flex;
+    align-items: center;
+    gap: 5px; /* Abstand zwischen Pfeil und Text */
+    transition: color 0.2s ease;
+}
+
+.link-zurueck:hover {
+    color: #000; /* Wird schwarz, wenn man drüberfährt */
+    text-decoration: underline;
+}
+
+/* Der Menü-Button (wird auf dem PC versteckt) */
+.sidebar-toggle {
+    display: none; 
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    padding: 15px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    
+    /* NEU: Damit Text und Pfeil nebeneinander stehen und der Pfeil rechts ist */
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Ab hier: Nur für Handys und kleine Bildschirme (max. 768px Breite) */
+@media (max-width: 768px) {
+    .hilfe-layout {
+        flex-direction: column;
+    }
+    .hilfe-sidebar {
+        width: 100%;
+    }
+
+    
+    .sidebar-toggle {
+        display: flex; 
+    }
+
+    /* Das Menü standardmäßig verstecken */
+    #sidebar-list {
+        display: none; 
+    }
+
+    /* Wenn die Klasse "open" da ist, wird es angezeigt */
+    #sidebar-list.open {
+        display: block; 
+    }
+}
+
+
+/* --- Anpassung der Kategorien für Handys --- */
+@media (max-width: 768px) {
+    .hilfe-kategorien {
+        grid-template-columns: repeat(2, 1fr); /* Auf dem Handy nur 2 Spalten */
+        gap: 15px; /* Etwas weniger Abstand */
+        padding: 0 15px; /* Etwas Abstand zum Rand, damit es nicht klebt */
+    }
+}
+
+/* Für sehr kleine Handys (unter 480px) könnte man sogar 1 Spalte machen */
+@media (max-width: 480px) {
+    .hilfe-kategorien {
+        grid-template-columns: 1fr; /* Alles untereinander */
+    }
 }

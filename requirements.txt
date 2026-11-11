@@ -1,42 +1,19 @@
-# ========================================
-# TECHSTORE - EINKAUFSLISTE
-# ========================================
-
-# Die Küche (Web-Framework)
+# Web-Framework & Server
 fastapi==0.115.6
-
-# Der Kellner (Server)
 uvicorn[standard]==0.34.0
 
-# Der Lagermeister (Datenbank-ORM)
+# Datenbank
 sqlalchemy==2.0.36
+psycopg2-binary>=2.9.12
 
-# Der Geheimcode (Umgebungsvariablen)
+# Validierung & Konfiguration
+pydantic>=2.13.0
 python-dotenv==1.0.1
 
-# Der Türsteher (JWT)
+# Authentifizierung
 python-jose[cryptography]==3.3.0
-
-# Der Tresor (Passwort-Hashing)
 bcrypt==4.2.1
 
-# Das Formular (Formulare)
+# Formulare & HTTP
 python-multipart==0.0.20
-
-pytest
-pytest-cov
-httpx
-
-fastapi
-uvicorn
-sqlalchemy
-pydantic
-python-jose[cryptography]
-bcrypt
-python-dotenv
-python-multipart
-pytest
-pytest-cov
-httpx
-psycopg2-binary
-requests
+requests==2.32.3

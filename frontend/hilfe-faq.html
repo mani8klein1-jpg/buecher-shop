@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weitere FAQs - Casa do Livro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <!-- Dein Header -->
+    </header>
+
+    <main class="hilfe-container">
+        
+        <section class="hilfe-header">
+            <h1>Casa do Livro</h1>
+            <h2>Hilfezentrum</h2>
+            <img src="bilder/hilfekopie1.png" alt="Bücherregal" class="hero-image">
+        </section>
+
+        <section class="hilfe-suche">
+            <form action="/suche" method="GET">
+                <div class="such-wrapper">
+                    <input type="text" name="q" placeholder="Suchhilfe (z.B. Lieferung, Rückgabe)">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+        </section>
+        <div class="top-zurueck-wrapper">
+            <a href="hilfe.html" class="link-zurueck">
+                <i class="fas fa-arrow-left"></i> Zurück zum Hilfezentrum
+            </a>
+        </div>
+        <section class="hilfe-layout">
+            
+            <aside class="hilfe-sidebar">
+               
+                <!-- Der Button für das Handy (ID: mobile-menu-toggle) -->
+                <div class="sidebar-toggle" id="mobile-menu-toggle">
+                    <span>Menü</span>
+                    <i class="fas fa-chevron-down" id="toggle-icon"></i>
+                </div>
+                
+                <!-- Die eigentliche Liste (ID: sidebar-list) -->
+                <ul id="sidebar-list">
+                    <li><a href="hilfe-konto.html">Mein Konto</a></li>
+                    <li><a href="hilfe-bestellungen.html">Bestellungen</a></li>
+                    <li><a href="hilfe-lieferung.html">Lieferung</a></li>
+                    <li><a href="hilfe-zahlung.html">Zahlungen</a></li>
+                    <li class="active"><a href="hilfe-faq.html">Weitere FAQs</a></li>
+                    <li><a href="hilfe-kontakt.html">Kontaktieren Sie uns</a></li>
+                </ul>
+            </aside>
+
+            <div class="hilfe-content">
+                <h2>Weitere FAQs</h2>
+                
+                <h3>❓ Haben Sie eine Frage?</h3>
+                <p>Hier finden Sie Antworten auf häufig gestellte Fragen, die nicht in die anderen Kategorien passen.</p>
+                
+                <h3>📚 Bieten Sie auch gebrauchte Bücher an?</h3>
+                <p>Momentan verkaufen wir ausschließlich neue Bücher. Wir arbeiten aber daran, unser Sortiment in Zukunft zu erweitern.</p>
+
+                <h3>🎁 Kann ich Bücher als Geschenk verpacken lassen?</h3>
+                <p>Ja, wir bieten eine Geschenkverpackung für 2,99 € pro Artikel an. Wählen Sie diese Option einfach im Warenkorb aus.</p>
+
+                <h3>🌍 Liefern Sie auch ins Ausland?</h3>
+                <p>Derzeit liefern wir nur innerhalb Deutschlands und nach Österreich. Weitere Länder sind in Planung.</p>
+                
+            </div>
+
+        </section>
+    </main>
+    <!-- Das JavaScript für das Handy-Menü auslagern -->
+    <script src="js/hilfe.js"></script>
+</body>
+</html>

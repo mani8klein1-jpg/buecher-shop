@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilfezentrum - Casa do Livro</title>
+    <!-- Hier bindest du später deine CSS-Datei ein -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Font Awesome für die Icons (kostenlos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Der Header, der auch auf deiner Hauptseite ist (Navigation) -->
+    <header>
+        <!-- Hier kommt dein bestehender Header-Code hin (Anmelden, Warenkorb etc.) -->
+    </header>
+
+    
+            <!-- Der Hilfe-Bereich -->
+    <main class="hilfe-container">
+        
+        <!-- Oben: Titel & Bild -->
+        <section class="hilfe-header">
+            <h1>Casa do Livro</h1>
+            <h2>Hilfezentrum</h2>
+            <img src="bilder/hilfekopie1.png" alt="Bücherregal" class="hero-image">
+        </section>
+
+        <!-- Suchfeld (bleibt oben) -->
+        <section class="hilfe-suche">
+            <form action="/suche" method="GET">
+                <div class="such-wrapper">
+                    <input type="text" name="q" placeholder="Suchhilfe (z.B. Lieferung, Rückgabe)">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+        </section>
+        <div class="top-zurueck-wrapper">
+            <a href="hilfe.html" class="link-zurueck">
+                <i class="fas fa-arrow-left"></i> Zurück zum Hilfezentrum
+            </a>
+        </div>
+        <!-- Das zweispaltige Layout (Sidebar + Inhalt) -->
+        <section class="hilfe-layout">
+            
+            <!-- LINKS: Die Menüleiste -->
+            <aside class="hilfe-sidebar">
+                <!-- Der Button für das Handy (ID: mobile-menu-toggle) -->
+                <div class="sidebar-toggle" id="mobile-menu-toggle">
+                    <span>Menü</span>
+                    <i class="fas fa-chevron-down" id="toggle-icon"></i>
+                </div>
+                
+                <!-- Die eigentliche Liste (ID: sidebar-list) -->
+                <ul id="sidebar-list">
+                    <li><a href="hilfe-konto.html">Mein Konto</a></li>
+                    <li><a href="hilfe-bestellungen.html">Bestellungen</a></li>
+                    <li  class="active"><a href="hilfe-lieferung.html">Lieferung</a></li>
+                    <li><a href="hilfe-zahlung.html">Zahlungen</a></li>
+                    <li><a href="hilfe-faq.html">Weitere FAQs</a></li>
+                    <li><a href="hilfe-kontakt.html">Kontaktieren Sie uns</a></li>
+                </ul>
+            </aside>
+
+            <!-- RECHTS: Der Inhalt für Lieferung -->
+            <div class="hilfe-content">
+                <h2>Lieferung & Versand</h2>
+                
+                <p>Wir möchten, dass deine Bücher schnell und sicher bei dir ankommen. Hier findest du alle Informationen zu unseren Lieferzeiten und Versandkosten.</p>
+                
+                <h3>📦 Lieferzeiten</h3>
+                <ul style="margin-bottom: 20px; line-height: 1.6;">
+                    <li><strong>Standardversand:</strong> 2-4 Werktage</li>
+                    <li><strong>Expressversand:</strong> 1-2 Werktage (Aufpreis)</li>
+                    <li>Bestellungen, die vor 14:00 Uhr eingehen, werden am selben Tag bearbeitet.</li>
+                </ul>
+
+                <h3>🚚 Versandkosten</h3>
+                <ul style="margin-bottom: 20px; line-height: 1.6;">
+                    <li>Ab einem Bestellwert von <strong>20,00 €</strong> ist der Versand innerhalb Deutschlands <strong>kostenlos</strong>.</li>
+                    <li>Darunter berechnen wir eine Pauschale von 3,99 €.</li>
+                </ul>
+
+                <p style="margin-top: 30px; font-size: 0.9em; color: #666;">
+                    * Hinweis: Dies ist ein Portfolio-Projekt. Es werden keine echten Waren versendet.
+                </p>
+                
+            </div>
+
+        </section>
+    </main>
+    
+<!-- Das JavaScript für das Handy-Menü auslagern -->
+    <script src="js/hilfe.js"></script>
+</body>
+</html>
