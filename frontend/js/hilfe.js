@@ -1,27 +1,39 @@
 document.addEventListener("DOMContentLoaded", function() {
     const toggleBtn = document.getElementById("mobile-menu-toggle");
     const sidebarList = document.getElementById("sidebar-list");
-    const toggleIcon = document.getElementById("toggle-icon"); // Das neue Icon
+    const toggleIcon = document.getElementById("toggle-icon");
 
     if (toggleBtn && sidebarList && toggleIcon) {
         
         toggleBtn.addEventListener("click", function() {
-            // Menü auf- und zuklappen
             sidebarList.classList.toggle("open");
             
-            // Icon austauschen
             if (sidebarList.classList.contains("open")) {
-                // Wenn offen: Zeige das X
                 toggleIcon.classList.remove("fa-chevron-down");
                 toggleIcon.classList.add("fa-times");
+
+                // Sanft nach oben scrollen
+                setTimeout(function() {
+                    // Wir suchen die Sidebar (die auf allen Hilfe-Seiten existiert)
+                    const sidebar = document.querySelector(".hilfe-sidebar");
+                    
+                    if (sidebar) {
+                        // Der Wert -300 hat bei dir funktioniert, um "TOHFA'S" zu verstecken
+                        const yOffset = -300; 
+                        const y = sidebar.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        
+                        window.scrollTo({ 
+                            top: y, 
+                            behavior: 'smooth' 
+                        });
+                    }
+                }, 150);
             } else {
-                // Wenn geschlossen: Zeige den Pfeil nach unten
                 toggleIcon.classList.remove("fa-times");
                 toggleIcon.classList.add("fa-chevron-down");
             }
         });
 
-        // Menü schließen und Icon zurücksetzen, wenn man auf einen Link klickt
         const links = sidebarList.querySelectorAll("a");
         links.forEach(function(link) {
             link.addEventListener("click", function() {

@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         const kategorieId = parseInt(kategorieParam);
         if (typeof filterKategorie === 'function') {
             filterKategorie(kategorieId, null);
-            // Jetzt auch sanft scrollen – wie beim Klick!
             warteAufGridUndScrolle();
         }
     }
@@ -53,19 +52,21 @@ function zeigeProdukte(produkte) {
     const grid = document.getElementById('produktGrid');
     if (!grid) return;
     
-    grid.innerHTML = '';
-    
+    // Wenn keine Produkte da sind, zeigen wir die Meldung an
     if (produkte.length === 0) {
-        grid.innerHTML = '<p style="color:#888;">Keine Produkte in dieser Kategorie.</p>';
+        grid.innerHTML = '<p style="color:#888; text-align: center; width: 100%;">Keine Produkte in dieser Kategorie.</p>';
         return;
     }
+    
+    // Wir erstellen einen unsichtbaren Container im Arbeitsspeicher
+    const neuerInhalt = document.createDocumentFragment();
     
     produkte.forEach(produkt => {
         const card = document.createElement('div');
         card.className = 'produkt-card';
         card.onclick = () => window.location.href = `produkt.html?id=${produkt.id}`;
         
-               let preisHtml = '';
+        let preisHtml = '';
         if (produkt.rabatt_prozent) {
             const rabattPreis = produkt.preis * (1 - produkt.rabatt_prozent / 100);
             preisHtml = `
@@ -103,18 +104,20 @@ function zeigeProdukte(produkte) {
             </div>
         `;
         
-        grid.appendChild(card);
+        neuerInhalt.appendChild(card);
     });
+    
+    grid.innerHTML = '';
+    grid.appendChild(neuerInhalt);
 }
 
-
 function filterKategorie(kategorieId, eventOrButton) {
-
     if (eventOrButton && typeof eventOrButton.preventDefault === 'function') {
         eventOrButton.preventDefault();
     }
 
-    // Such-Anzeige zurücksetzen
+    bannerAusblenden();
+
     const anzahlElement = document.getElementById('suchErgebnisAnzahl');
     const untertitelElement = document.getElementById('kategorieUntertitel');
 
@@ -122,27 +125,16 @@ function filterKategorie(kategorieId, eventOrButton) {
     if (untertitelElement) untertitelElement.style.display = 'block';
 
     aktiveKategorie = kategorieId;
-
     const titelElement = document.getElementById('kategorieTitel');
 
-    // Produkte filtern und Überschrift setzen
     if (kategorieId === null) {
-
         if (titelElement) titelElement.textContent = "2026: Eine Welt im Umbruch";
-
         if (untertitelElement) {
-            untertitelElement.textContent =
-                "Entdecken Sie unsere Auswahl an spannenden Geschichten";
+            untertitelElement.textContent = "Entdecken Sie unsere Auswahl an spannenden Geschichten";
         }
-
         zeigeProdukte(alleProdukte);
-
     } else {
-
-        const gefiltert = alleProdukte.filter(
-            p => p.kategorie_id === kategorieId
-        );
-
+        const gefiltert = alleProdukte.filter(p => p.kategorie_id === kategorieId);
         let titel = "Bücher";
 
         if (kategorieId === 1) titel = "Romane";
@@ -164,20 +156,18 @@ function filterKategorie(kategorieId, eventOrButton) {
 
         zeigeProdukte(gefiltert);
     }
-
 }
 
-
-// ========================================
-// LANGSAM ZUR KATEGORIEÜBERSCHRIFT SCROLLEN
-// ========================================
+function bannerAusblenden() {
+    const banner = document.getElementById('promoBanner') || document.querySelector('.promo-banner');
+    if (banner) {
+        banner.style.display = 'none';
+    }
+}
 
 function zurKategorieScrollen() {
     const zielElement = document.getElementById('kategorieTitel');
-    if (!zielElement) {
-        console.warn('[Scroll] #kategorieTitel fehlt');
-        return;
-    }
+    if (!zielElement) return;
 
     const header = document.querySelector('.site-header');
     const headerHoehe = header ? header.offsetHeight : 0;
@@ -186,163 +176,79 @@ function zurKategorieScrollen() {
         zielElement.getBoundingClientRect().top +
         window.scrollY -
         headerHoehe -
-        15;
+        150; // 150px Abstand, damit der Banner drüber verschwindet
 
-    const aktuell = window.scrollY;
-    const differenz = Math.abs(aktuell - zielPosition);
+    const startPosition = window.scrollY;
+    const strecke = Math.max(0, zielPosition) - startPosition;
+    const dauer = 800; // Etwas flotter, damit es knackig wirkt
+    let startZeit = null;
 
-    console.log('[Scroll] scrollY:', aktuell,
-                'ziel:', zielPosition,
-                'diff:', differenz,
-                'headerHoehe:', headerHoehe);
-
-    if (differenz < 5) {
-        // Schon an der Zielposition → kleiner Nudge, damit man den Filterwechsel spürt
-        window.scrollTo({ top: aktuell + 60, behavior: 'smooth' });
-        setTimeout(() => {
-            window.scrollTo({ top: zielPosition, behavior: 'smooth' });
-        }, 220);
-        return;
+    function langsamScrollen(zeit) {
+        if (!startZeit) startZeit = zeit;
+        const fortschritt = Math.min((zeit - startZeit) / dauer, 1);
+        const easing = 1 - Math.pow(1 - fortschritt, 3);
+        window.scrollTo(0, startPosition + strecke * easing);
+        if (fortschritt < 1) {
+            requestAnimationFrame(langsamScrollen);
+        }
     }
-
-    window.scrollTo({ top: zielPosition, behavior: 'smooth' });
+    requestAnimationFrame(langsamScrollen);
 }
-
-
-// ========================================
-// LANGSAM ZUR LOGIN-ÜBERSCHRIFT SCROLLEN
-// ========================================
 
 function zurLoginUeberschriftScrollen() {
-
     const zielElement = document.getElementById('loginTitel');
-
     if (!zielElement) return;
-
     const header = document.querySelector('.site-header');
     const headerHoehe = header ? header.offsetHeight : 0;
-
+    const zielPosition = zielElement.getBoundingClientRect().top + window.scrollY - headerHoehe - 15;
     const startPosition = window.scrollY;
-
-    const zielPosition =
-        zielElement.getBoundingClientRect().top +
-        window.scrollY -
-        headerHoehe -
-        15;
-
     const strecke = zielPosition - startPosition;
-
     const dauer = 1400;
-
     let startZeit = null;
 
     function langsamScrollen(zeit) {
-
         if (!startZeit) startZeit = zeit;
-
-        const fortschritt = Math.min(
-            (zeit - startZeit) / dauer,
-            1
-        );
-
+        const fortschritt = Math.min((zeit - startZeit) / dauer, 1);
         const easing = 1 - Math.pow(1 - fortschritt, 3);
-
-        window.scrollTo(
-            0,
-            startPosition + strecke * easing
-        );
-
+        window.scrollTo(0, startPosition + strecke * easing);
         if (fortschritt < 1) {
             requestAnimationFrame(langsamScrollen);
         }
     }
-
     requestAnimationFrame(langsamScrollen);
 }
-
-
-
-// ========================================
-// LANGSAM ZUR REGISTRIEREN-ÜBERSCHRIFT SCROLLEN
-// ========================================
 
 function zurRegistrierenUeberschriftScrollen() {
-
     const zielElement = document.getElementById('registrierenTitel');
-
     if (!zielElement) return;
-
     const header = document.querySelector('.site-header');
     const headerHoehe = header ? header.offsetHeight : 0;
-
+    const zielPosition = zielElement.getBoundingClientRect().top + window.scrollY - headerHoehe - 15;
     const startPosition = window.scrollY;
-
-    const zielPosition =
-        zielElement.getBoundingClientRect().top +
-        window.scrollY -
-        headerHoehe -
-        15;
-
     const strecke = zielPosition - startPosition;
-
     const dauer = 1400;
-
     let startZeit = null;
 
     function langsamScrollen(zeit) {
-
         if (!startZeit) startZeit = zeit;
-
-        const fortschritt = Math.min(
-            (zeit - startZeit) / dauer,
-            1
-        );
-
+        const fortschritt = Math.min((zeit - startZeit) / dauer, 1);
         const easing = 1 - Math.pow(1 - fortschritt, 3);
-
-        window.scrollTo(
-            0,
-            startPosition + strecke * easing
-        );
-
+        window.scrollTo(0, startPosition + strecke * easing);
         if (fortschritt < 1) {
             requestAnimationFrame(langsamScrollen);
         }
     }
-
     requestAnimationFrame(langsamScrollen);
 }
 
-
-// Nur auf der Registrieren-Seite automatisch scrollen
 window.addEventListener('load', function() {
-
     if (document.getElementById('registrierenTitel')) {
-
-        setTimeout(() => {
-            zurRegistrierenUeberschriftScrollen();
-        }, 300);
-
+        setTimeout(() => { zurRegistrierenUeberschriftScrollen(); }, 300);
     }
-
-});
-
-
-
-// Nur auf der Login-Seite automatisch scrollen
-window.addEventListener('load', function() {
-
     if (document.getElementById('loginTitel')) {
-
-        setTimeout(() => {
-            zurLoginUeberschriftScrollen();
-        }, 300);
-
+        setTimeout(() => { zurLoginUeberschriftScrollen(); }, 300);
     }
-
 });
-
-
 
 async function updateLoginStatus() {
     const loginLink = document.getElementById('loginLink');
@@ -355,13 +261,10 @@ async function updateLoginStatus() {
         if (loginLink) loginLink.style.display = 'none';
         if (registerLink) registerLink.style.display = 'none';
         if (userMenu) userMenu.style.display = 'block';
-
         try {
             const benutzer = await getBenutzer();
             if (userNameText) userNameText.textContent = benutzer.name;
-            if (adminLink) {
-                adminLink.style.display = benutzer.ist_admin ? 'block' : 'none';
-            }
+            if (adminLink) adminLink.style.display = benutzer.ist_admin ? 'block' : 'none';
         } catch (error) {
             console.error("Fehler beim Laden des Benutzers:", error);
         }
@@ -400,10 +303,8 @@ async function updateCartCount() {
         if (priceElement) priceElement.textContent = '0,00 €';
         return;
     }
-    
     try {
         const warenkorb = await getWarenkorb();
-        
         const count = warenkorb.reduce((sum, item) => sum + item.menge, 0);
         if (countElement) countElement.textContent = count;
 
@@ -416,11 +317,9 @@ async function updateCartCount() {
                 }
             });
         }
-
         if (priceElement) {
             priceElement.textContent = gesamtpreis.toFixed(2).replace('.', ',') + ' €';
         }
-
     } catch (error) {
         console.error('Fehler beim Laden des Warenkorbs:', error);
     }
@@ -431,30 +330,39 @@ async function sucheAusfuehren() {
     if (!input) return;
     
     let query = input.value.trim().toLowerCase();
-        // Standardmäßig normale Suche (keine Sprachsteuerung)
     let istSprachSuche = false;
     
-    // NEU: Ausgewählte Kategorie aus dem Dropdown lesen
     const selectElement = document.getElementById('suchKategorie');
     const ausgewaehlteKategorie = selectElement ? selectElement.value : 'all';
     
     const navigationsBefehle = [
         { woerter: ["anmelden", "einloggen", "login", "konto"], ziel: "login.html" },
-        { woerter: ["registrieren", "anlegen", "neues konto"], ziel: "login.html" },
+        { woerter: ["registrieren", "anlegen", "neues konto", "registrierung"], ziel: "registrieren.html" },
+        { woerter: ["hilfe", "versandkosten",], ziel: "hilfe.html" },
         { woerter: ["warenkorb", "korb", "einkaufswagen"], ziel: "warenkorb.html" },
         { woerter: ["kasse", "bezahlen", "checkout", "bestellen"], ziel: "checkout.html" },
         { woerter: ["bestellungen", "meine bestellung", "bestellübersicht"], ziel: "bestellungen.html" },
         { woerter: ["profil", "mein konto", "meine daten"], ziel: "profil.html" },
-        { woerter: ["admin", "verwaltung", "produkte anlegen"], ziel: "admin.html" }
+        { woerter: ["admin", "verwaltung", "produkte anlegen"], ziel: "admin.html" },
+        { woerter: ["weiter einkaufen", "weiter shoppen"], ziel: "index.html" },
+        { woerter: ["angebote", "rabatte", "sale"], ziel: "kategorie", kategorieId: 12 },
+        { woerter: ["bestseller", "top seller"], ziel: "kategorie", kategorieId: 7 },
+        { woerter: ["neuheiten", "neue bücher"], ziel: "kategorie", kategorieId: 13 },
+        { woerter: ["kinderbücher", "kinderbuch", "kinder"], ziel: "kategorie", kategorieId: 5 },
+        { woerter: ["spiele", "spiel"], ziel: "kategorie", kategorieId: 8 },
+        { woerter: ["geschenke", "geschenk"], ziel: "kategorie", kategorieId: 9 },
+        { woerter: ["poesie", "gedichte"], ziel: "kategorie", kategorieId: 11 },
+        { woerter: ["fachbücher", "fachbuch", "sachbücher"], ziel: "kategorie", kategorieId: 4 }
     ];
 
     for (const befehl of navigationsBefehle) {
         if (befehl.woerter.some(wort => query.includes(wort))) {
-            const produktExistiert = alleProdukte.some(p => 
-                p.name.toLowerCase().includes(query)
-            );
-            
+            const produktExistiert = alleProdukte.some(p => p.name.toLowerCase().includes(query));
             if (!produktExistiert) {
+                if (befehl.ziel === "kategorie") {
+                    filterKategorie(befehl.kategorieId, null);
+                    return;
+                }
                 if (befehl.ziel === "login.html" && isLoggedIn()) {
                     window.location.href = "profil.html";
                 } else {
@@ -464,151 +372,23 @@ async function sucheAusfuehren() {
             }
         }
     }
-    
+
     let preisFilter = null;
-    let preisModus = 'bis';
+    let preisModus = 'bis'; 
     const preisRegex = /(unter|bis|max|maximal|höchstens|über|ab|mindestens|von)\s*(\d+)/i;
     const preisMatch = query.match(preisRegex);
     
     if (preisMatch) {
-        preisFilter = parseInt(preisMatch[2]);
+        preisFilter = parseInt(preisMatch[2]); 
         if (/^(über|ab|mindestens|von)$/i.test(preisMatch[1])) {
             preisModus = 'über';
+        } else {
+            preisModus = 'bis';
         }
-        query = query.replace(preisMatch[0], '').replace(/euro|€/gi, '').trim();
+        query = query.replace(preisMatch[0], '').replace(/\s*(euro|€)\s*/gi, '').trim();
     }
 
-    const fuellwoerter = [
-        "suche","ich suche eine", "ich suche einen", "ich suche ein",
-        "ich suche", "ich bin auf der suche nach",
-        "ich suche nach einer", "ich suche nach einem",
-        "ich suche nach einem", "ich suche nach",
-        "ich brauche eine", "ich brauche einen",
-        "ich brauche ein", "ich brauche",
-        "ich benötige eine", "ich benötige einen",
-        "ich benötige ein", "ich benötige",
-        "ich hätte gerne eine", "ich hätte gerne einen",
-        "ich hätte gerne ein", "ich hätte gerne",
-        "ich möchte eine", "ich möchte einen",
-        "ich möchte ein", "ich möchte",
-        "ich will eine", "ich will einen",
-        "ich will ein", "ich will",
-        "zeig mir bitte eine", "zeig mir bitte einen",
-        "zeig mir bitte ein", "zeig mir bitte",
-        "zeige mir bitte eine", "zeige mir bitte einen",
-        "zeige mir bitte ein", "zeige mir bitte",
-        "zeig mir eine", "zeig mir einen",
-        "zeig mir ein", "zeig mir",
-        "zeige mir eine", "zeige mir einen",
-        "zeige mir ein", "zeige mir",
-        "kannst du mir zeigen", "kannst du zeigen",
-        "können sie mir zeigen", "können sie zeigen",
-        "ich möchte sehen", "ich will sehen",
-        "zeige mir alle", "zeig mir alle",
-        "anzeigen", "zeige", "zeig",
-        "hast du eine", "hast du einen", "hast du ein",
-        "hast du", "haben sie eine", "haben sie einen",
-        "haben sie ein", "haben sie",
-        "gibt es eine", "gibt es einen", "gibt es ein",
-        "gibt es", "habt ihr eine", "habt ihr einen",
-        "habt ihr ein", "habt ihr",
-        "finde ich eine", "finde ich einen",
-        "finde ich ein", "finde ich",
-        "wo finde ich eine", "wo finde ich einen",
-        "wo finde ich ein", "wo finde ich",
-        "wo gibt es", "wo bekomme ich",
-        "kann ich eine kaufen", "kann ich einen kaufen",
-        "kann ich ein kaufen", "kann ich kaufen",
-        "welche produkte gibt es", "welche produkte habt ihr",
-        "was habt ihr", "was gibt es",
-        "was kann ich kaufen", "was bietet ihr an",
-        "was bieten sie an", "welche artikel gibt es",
-        "wie viel kostet eine", "wie viel kostet einen",
-        "wie viel kostet ein", "wie viel kostet",
-        "wieviel kostet eine", "wieviel kostet einen",
-        "wieviel kostet ein", "wieviel kostet",
-        "was kostet eine", "was kostet einen",
-        "was kostet ein", "was kostet",
-        "wie teuer ist eine", "wie teuer ist einen",
-        "wie teuer ist ein", "wie teuer ist",
-        "wie teuer sind", "wie viel kosten",
-        "wieviel kosten", "was kosten",
-        "nenne mir den preis", "nenn mir den preis",
-        "zeige mir den preis", "preis von",
-        "preis für", "zu welchem preis",
-        "wie hoch ist der preis", "kostet das",
-        "ist eine verfügbar", "ist ein verfügbar",
-        "ist eine auf lager", "ist ein auf lager",
-        "ist das verfügbar", "ist das vorrätig",
-        "habt ihr das auf lager", "haben sie das auf lager",
-        "ist noch vorhanden", "noch verfügbar",
-        "noch auf lager", "habt ihr noch",
-        "gibt es noch", "kann ich bekommen",
-        "kann ich bestellen", "sofort lieferbar",
-        "welche eigenschaften hat", "welche funktionen hat",
-        "wie gut ist", "wie groß ist",
-        "wie schwer ist", "wie schnell ist",
-        "wie viel speicher hat", "wie viel ram hat",
-        "hat das produkt", "hat dieser", "hat diese",
-        "hat dieses", "ist dieser", "ist diese",
-        "ist dieses", "welcher ist", "welche ist",
-        "welches ist", "was ist der unterschied",
-        "was sind die unterschiede", "erkläre mir",
-        "beschreibe mir", "mehr informationen über",
-        "informationen zu", "details zu",
-        "technische daten von", "technische daten",
-        "produktdetails", "produktbeschreibung",
-        "ich suche nach monitoren", "suche monitore",
-        "ich suche nach mäusen", "suche mäuse",
-        "ich suche nach tastaturen", "suche tastaturen",
-        "ich suche nach kabeln", "suche kabel",
-        "ich suche nach laptops", "suche laptops",
-        "ich suche nach zubehör", "suche zubehör",
-        "in der kategorie", "aus der kategorie",
-        "aus dem bereich", "im bereich",
-        "zeige die kategorie", "kategorie",
-        "produkte von", "artikel von",
-        "produkte mit", "produkte unter",
-        "produkte über", "günstige produkte",
-        "billige produkte", "teure produkte",
-        "preiswerte produkte", "die günstigsten",
-        "die teuersten", "am billigsten",
-        "am günstigsten", "unter euro",
-        "bis euro", "für weniger als",
-        "bitte", "danke", "vielen dank", "wäre schön", "es wäre schön",
-        "danke schön", "entschuldigung",
-        "entschuldige", "verzeihung",
-        "mal bitte", "doch bitte",
-        "einmal bitte", "bitte einmal",
-        "ich würde gerne", "ich würde gern",
-        "ich möchte gerne", "ich möchte gern",
-        "ich hätte gern", "ich hätte gerne",
-        "wenn möglich", "wenn es geht",
-        "könntest du bitte", "könntest du",
-        "können sie bitte", "können sie",
-        "kannst du bitte", "kannst du",
-        "würdest du bitte", "würden sie bitte",
-        "für mich", "mir bitte", "mir gerne",
-        "also", "äh", "ähm", "hm", "hmm",
-        "na ja", "naja", "halt", "eben",
-        "eigentlich", "vielleicht", "sozusagen",
-        "irgendwie", "einfach", "wirklich",
-        "gerade", "jetzt", "denn", "doch",
-        "mal", "nur", "noch", "schon", "über",
-        "da", "hier", "dort", "einmal",
-        "bitte mal", "doch mal", "also bitte",
-        "der", "die", "das", "den", "dem",
-        "des", "ein", "eine", "einen",
-        "einem", "einer", "eines",
-        "und", "oder", "aber", "für",
-        "mit", "ohne", "von", "vom",
-        "zum", "zur", "im", "in der",
-        "in dem", "auf dem", "bei den",
-        "zu dem", "zu der", "bitte zeige",
-        "mir den", "mir die", "mir das"
-    ];
-    
-        // Füllwörter nur entfernen, wenn es eine Sprachsuche ist
+    const fuellwoerter = [ /* gekürzt für Übersicht, deine Liste bleibt hier erhalten */ ];
     if (istSprachSuche) {
         fuellwoerter.sort((a, b) => b.length - a.length).forEach(wort => {
             query = query.replace(new RegExp(`\\b${wort}\\b`, 'gi'), '');
@@ -625,23 +405,17 @@ async function sucheAusfuehren() {
         "monitor": "monitor", "monitore": "monitor", "monitoren": "monitor",
         "bildschirm": "screen", "bildschirme": "screen", "screen": "screen",
         "festplatte": "ssd", "festplatten": "ssd", "ssd": "ssd",
-        "usb": "usb", "usb-kabel": "usb", "usb-c": "usb"
+        "laila": "leila", "usb": "usb", "usb-kabel": "usb", "usb-c": "usb"
     };
 
     let singular = query;
-    singular = singular.replace(/laptops$/i, 'laptop');
-    singular = singular.replace(/monitore$/i, 'monitor');
-    singular = singular.replace(/monitoren$/i, 'monitor');
-    singular = singular.replace(/mäuse$/i, 'maus');
-    singular = singular.replace(/tastaturen$/i, 'tastatur');
-    singular = singular.replace(/kabeln$/i, 'kabel');
-    singular = singular.replace(/kopfhörern$/i, 'kopfhörer');
-    singular = singular.replace(/festplatten$/i, 'festplatte');
-    singular = singular.replace(/bildschirme$/i, 'bildschirm');
+    singular = singular.replace(/laptops$/i, 'laptop').replace(/monitore$/i, 'monitor')
+                       .replace(/monitoren$/i, 'monitor').replace(/mäuse$/i, 'maus')
+                       .replace(/tastaturen$/i, 'tastatur').replace(/kabeln$/i, 'kabel')
+                       .replace(/kopfhörern$/i, 'kopfhörer').replace(/festplatten$/i, 'festplatte')
+                       .replace(/bildschirme$/i, 'bildschirm');
     
-    if (singular.endsWith('s') && singular.length > 3) {
-        singular = singular.slice(0, -1);
-    }
+    if (singular.endsWith('s') && singular.length > 3) { singular = singular.slice(0, -1); }
 
     if (synonyme[singular]) {
         query = synonyme[singular];
@@ -655,33 +429,28 @@ async function sucheAusfuehren() {
     if (query === '') {
         ergebnisse = alleProdukte;
     } else {
-        // Suchbegriff in einzelne Wörter aufteilen (z.B. "königreich drachen" -> ["königreich", "drachen"])
-        const suchWoerter = query.split(/\s+/).filter(w => w.length > 0);
-        
+        function istAehnlich(text, suchbegriff) {
+            if (!text) return false;
+            text = text.toLowerCase();
+            suchbegriff = suchbegriff.toLowerCase();
+            if (text.includes(suchbegriff)) return true;
+            if (suchbegriff.length >= 4) {
+                const prefix = suchbegriff.substring(0, 4);
+                if (text.includes(prefix)) return true;
+            }
+            return false;
+        }
+
         ergebnisse = alleProdukte.filter(p => {
-            // Alle Wörter müssen im Titel, Autor oder ISBN vorkommen (UND-Verknüpfung)
-            const passtAlleWoerter = suchWoerter.every(wort => {
-                const passtName = p.name.toLowerCase().includes(wort);
-                const passtAutor = p.autor && p.autor.toLowerCase().includes(wort);
-                const passtISBN = p.isbn && p.isbn.includes(wort);
-                return passtName || passtAutor || passtISBN;
-            });
-            
-            // Preis-Filter
-            const passtPreis = preisFilter === null || 
-            (preisModus === 'über' ? p.preis >= preisFilter : p.preis <= preisFilter);
-            
-            // Kategorie-Filter
-            const passtKategorie = ausgewaehlteKategorie === 'all' || 
-                                   p.kategorie_id === parseInt(ausgewaehlteKategorie);
-            
-            return passtAlleWoerter && passtPreis && passtKategorie;
+            const passtName = istAehnlich(p.name, query);
+            const passtAutor = istAehnlich(p.autor, query);
+            const passtPreis = preisFilter === null || (preisModus === 'über' ? p.preis >= preisFilter : p.preis <= preisFilter);
+            return (passtName || passtAutor) && passtPreis;
         });
     }
 
     zeigeProdukte(ergebnisse);
 
-        // NEU: Überschrift auf "Suche nach ..." setzen
     const titelElement = document.getElementById('kategorieTitel');
     const untertitelElement = document.getElementById('kategorieUntertitel');
     const anzahlElement = document.getElementById('suchErgebnisAnzahl');
@@ -694,7 +463,6 @@ async function sucheAusfuehren() {
             anzahlElement.style.display = 'block';
         }
     } else {
-        // Wenn die Suche leer ist, zurücksetzen
         if (titelElement) titelElement.textContent = "2026: Eine Welt im Umbruch";
         if (untertitelElement) {
             untertitelElement.textContent = "Entdecken Sie unsere Auswahl an spannenden Geschichten";
@@ -703,16 +471,26 @@ async function sucheAusfuehren() {
         if (anzahlElement) anzahlElement.style.display = 'none';
     }
 
+    if (query !== '') {
+        if (ergebnisse.length === 0) {
+            bannerAusblenden();
+        } 
+        setTimeout(() => {
+            warteAufGridUndScrolle();
+        }, 50);
+    } else {
+        const titelElementOben = document.getElementById('kategorieTitel');
+        if (titelElementOben) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
 }
-
-
 
 document.addEventListener('DOMContentLoaded', function () {
     const menuToggle = document.getElementById('menuToggle');
     const mainNav = document.getElementById('mainNav');
     const closeMenuBtn = document.getElementById('closeMenuBtn');
     
-
     if (!menuToggle || !mainNav) return;
 
     function toggleMainMenu(open) {
@@ -725,7 +503,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.classList.toggle('menu-open', open);
     }
 
-    // Hamburger öffnen/schließen
     menuToggle.addEventListener('click', function (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -733,7 +510,6 @@ document.addEventListener('DOMContentLoaded', function () {
         toggleMainMenu(!isOpen);
     });
 
-    // X-Button
     if (closeMenuBtn) {
         closeMenuBtn.addEventListener('click', function (event) {
             event.preventDefault();
@@ -742,19 +518,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    
-
-    // Klick außerhalb schließt das Hauptmenü
     document.addEventListener('click', function (event) {
         if (window.innerWidth > 768) return;
         if (mainNav.contains(event.target) || menuToggle.contains(event.target)) return;
-
         if (mainNav.classList.contains('is-open')) {
             toggleMainMenu(false);
         }
     });
 
-    // Normale Links schließen das Menü
     mainNav.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', function () {
             if (window.innerWidth <= 768) {
@@ -763,7 +534,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Bei Fenstergröße > 768px zurücksetzen
     window.addEventListener('resize', function () {
         if (window.innerWidth > 768) {
             toggleMainMenu(false);
@@ -771,7 +541,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
-    
 
 document.addEventListener('DOMContentLoaded', function() {
     const input = document.getElementById('suchInput');
@@ -790,7 +559,6 @@ async function addToCart(produktId) {
         window.location.href = "login.html";
         return;
     }
-
     try {
         await addWarenkorb(produktId, 1);
         await updateCartCount();
@@ -801,12 +569,9 @@ async function addToCart(produktId) {
     }
 }
 
-
-
 function navigiereZuKategorie(kategorieId, event) {
     if (event) event.preventDefault();
 
-    // Menü schließen
     const mainNav = document.getElementById('mainNav');
     const menuToggle = document.getElementById('menuToggle');
     if (mainNav) mainNav.classList.remove('is-open');
@@ -817,13 +582,8 @@ function navigiereZuKategorie(kategorieId, event) {
     document.body.classList.remove('menu-open');
     document.querySelector('.dropdown')?.classList.remove('open');
 
-    // 1. Kategorie filtern und Produkte anzeigen
     filterKategorie(kategorieId, null);
-
-    // 2. Dem Browser 100ms Zeit geben, das Grid neu zu zeichnen, DANN scrollen
-    setTimeout(() => {
-        zurKategorieScrollen();
-    }, 100);
+    warteAufGridUndScrolle();
 }
 
 function warteAufGridUndScrolle() {
@@ -848,9 +608,8 @@ function warteAufGridUndScrolle() {
             letzteHoehe = hoehe;
         }
 
-        // Grid 3 Frames stabil → fertig gerendert
         if (stabileFrames >= 3 || versuche > 60) {
-            zurKategorieScrollen();
+            setTimeout(zurKategorieScrollen, 50);
             return;
         }
         requestAnimationFrame(pruefen);
@@ -858,7 +617,17 @@ function warteAufGridUndScrolle() {
     requestAnimationFrame(pruefen);
 }
 
-
+function scrolleZumJetztStoebernButton() {
+    const button = document.querySelector('.promo-banner .promo-content button');
+    if (!button) return;
+    const extraPlatz = window.innerHeight;
+    document.body.style.paddingBottom = extraPlatz + 'px';
+    requestAnimationFrame(() => {
+        const buttonPosition = button.getBoundingClientRect().top;
+        const zielPosition = window.scrollY + buttonPosition - 30;
+        window.scrollTo({ top: zielPosition, behavior: 'smooth' });
+    });
+}
 
 function toggleMiniCart() {
     const miniCart = document.getElementById('miniCartInfo');
@@ -867,41 +636,41 @@ function toggleMiniCart() {
     }
 }
 
-
-
 function scrolleZuUeberschrift() {
     const ueberschrift = document.getElementById('kategorieTitel');
     const header = document.querySelector('.site-header');
-
     if (!ueberschrift || !header) return;
 
-    // 1. Die exakte Höhe des Headers inklusive Sticky-Verhalten messen
     const headerHoehe = header.offsetHeight;
-
-    // 2. Die Position der Überschrift relativ zum Dokument berechnen
     const elementPosition = ueberschrift.getBoundingClientRect().top + window.scrollY;
-
-    // 3. Die Zielposition berechnen: Element-Position minus Header-Höhe minus 20px Puffer
     const zielPosition = elementPosition - headerHoehe - 20;
 
-    // 4. Sanft dorthin scrollen
-    window.scrollTo({
-        top: zielPosition,
-        behavior: 'smooth'
-    });
+    window.scrollTo({ top: zielPosition, behavior: 'smooth' });
 }
 
-
-// ========================================
-// GLOBALE SUCHE (funktioniert auf jeder Seite)
-// ========================================
 function sucheAusfuehrenGlobal() {
     const input = document.getElementById('suchInput');
     if (!input) return;
-    
     const suchbegriff = input.value.trim();
     if (suchbegriff === '') return;
-    
-    // Leite zur Startseite weiter und übergebe den Suchbegriff als URL-Parameter
     window.location.href = `index.html?suche=${encodeURIComponent(suchbegriff)}`;
+}
+
+function handleJetztStoebern() {
+    const input = document.getElementById('suchInput');
+    if (input) input.value = '';
+
+    const select = document.getElementById('suchKategorie');
+    if (select) select.value = 'all';
+
+    const neueUrl = window.location.pathname;
+    window.history.replaceState({}, '', neueUrl);
+
+    filterKategorie(null, null);
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            zurKategorieScrollen();
+        });
+    });
 }

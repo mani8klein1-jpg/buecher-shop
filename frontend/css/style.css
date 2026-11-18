@@ -94,10 +94,7 @@ body {
     align-items: center;
 }
 
-.logo img {
-    height: 80px;
-    width: auto;
-}
+
 
 /* Suchfeld */
 .search-box {
@@ -390,11 +387,7 @@ body {
         min-width: 0;
     }
 
-    .logo img {
-        height: 90px !important;
-        max-width: 100%;
-        object-fit: contain;
-    }
+   
 
     .cart {
         min-width: 85px;
@@ -455,9 +448,7 @@ body {
         font-size: 15px;
     }
 
-    .logo img {
-        height: 62px !important;
-    }
+    
 
     .cart {
         min-width: 75px;
@@ -487,7 +478,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 25px;
-    margin-top: 30px;
+    margin-top: 10px;
 }
 
 .produkt-card {
@@ -508,7 +499,7 @@ body {
 
 .produkt-card img {
     width: 100%;
-    height: 300px;
+   aspect-ratio: 1 / 1;
     object-fit: contain;
     background-color: #f9f9f9;
     padding: 10px;
@@ -1168,14 +1159,7 @@ footer {
         margin: 0;
     }
 
-    .site-header .header-main .logo img {
-        display: block;
-        width: auto;
-        height: auto !important;
-        max-width: 100%;
-        max-height: 64px;
-        object-fit: contain;
-    }
+    
 
     /* Warenkorb rechts oben */
     .site-header .header-main .cart {
@@ -1316,13 +1300,7 @@ footer {
         min-width: 0;
     }
 
-    .site-header .header-main .logo img {
-    display: block;
-    width: auto;
-    height: 120px !important;
-    max-width: 240px;
-    object-fit: contain;
-}
+   
     
     /* Suchfeld mittig zwischen Logo und Warenkorb */
     
@@ -1501,19 +1479,7 @@ footer {
 }
 
 /* CASA DO LIVRO – Logo auf dem Handy vergrößern */
-@media (max-width: 768px) {
-    .site-header .header-main .logo img {
-        max-height: 90px !important;
-        width: auto !important;
-        max-width: 100% !important;
-        object-fit: contain;
-    }
 
-    .site-header .header-main .logo {
-        justify-self: center;
-        min-width: 0;
-    }
-}
 
 
 /* ========================================
@@ -1729,17 +1695,17 @@ footer {
    ======================================== */
 
 
-
 .shop-intro {
-    scroll-margin-top: 185px; /* Genau die Höhe deines Headers am PC */
+    scroll-margin-top: 185px;
     text-align: left;
-    margin-top: 30px;
-    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 30px; /* <-- WICHTIG: Fester Abstand nach unten */
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
     padding-left: 20px;
 }
+
 
 .shop-intro h2 {
     font-family: 'Montserrat', sans-serif;
@@ -2018,7 +1984,7 @@ footer {
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     flex-wrap: wrap;
-    max-width: 1100px;
+    max-width: 1200px; /* <-- Jetzt bündig mit dem Header */
     margin: 0 auto;
 }
 
@@ -2721,7 +2687,7 @@ footer {
 @media (max-width: 768px) {
     .shop-intro {
         /* 209px ist dein Header. Plus ca. 20-30px Abstand nach unten. */
-        scroll-margin-top: 240px; 
+        scroll-margin-top: 210px; 
     }
 }
 
@@ -3148,7 +3114,7 @@ body {
 
 /* Der aktive Menüpunkt (Kontakt) */
 .hilfe-sidebar li.active a {
-    background-color: #1a1a1a;
+    background-color: #002D62;
     color: #ffffff;
 }
 
@@ -3230,16 +3196,17 @@ body {
 /* Der Menü-Button (wird auf dem PC versteckt) */
 .sidebar-toggle {
     display: none; 
-    background-color: #f8f9fa;
+    background-color: #002D62;
     border: 1px solid #e0e0e0;
     padding: 15px 20px;
     font-weight: bold;
     cursor: pointer;
     user-select: none;
     
-    /* NEU: Damit Text und Pfeil nebeneinander stehen und der Pfeil rechts ist */
+    /*Damit Text und Pfeil nebeneinander stehen und der Pfeil rechts ist */
     justify-content: space-between;
     align-items: center;
+    color: #ffffff;
 }
 
 /* Ab hier: Nur für Handys und kleine Bildschirme (max. 768px Breite) */
@@ -3282,4 +3249,89 @@ body {
     .hilfe-kategorien {
         grid-template-columns: 1fr; /* Alles untereinander */
     }
+}
+
+/* ========================================
+   LOGO-GRÖSSE
+   ======================================== */
+
+/* 1. Desktop-Regel (Gilt für alle Bildschirme, die größer als 768px sind) */
+.site-header .header-main .logo img {
+    height: 75px; /* <-- HIER die PC-Größe anpassen */
+    width: auto;
+    max-width: 250px;
+    object-fit: contain;
+    display: block;
+}
+
+/* 2. Mobile-Regel (Überschreibt die Desktop-Regel auf kleinen Bildschirmen) */
+@media (max-width: 768px) {
+    .site-header .header-main .logo img {
+        height: 80px; /* <-- HIER die Handy-Größe anpassen */
+        width: auto;
+        max-width: 100%; /* damit es auf kleinen Bildschirmen nicht zu breit wird */
+        object-fit: contain;
+        display: block;
+    }
+}
+
+
+/* ========================================
+   PFEILE FÜR DIE HILFE-SIDEBAR
+   ======================================== */
+
+/* Nur auf dem Handy (wenn die Sidebar eingeklappt ist) */
+@media (max-width: 768px) {
+    
+    /* Jeder Link in der Sidebar bekommt einen Pfeil rechts */
+    .hilfe-sidebar ul li a {
+        position: relative;
+        padding-right: 30px; /* Platz für den Pfeil */
+        display: block;
+    }
+
+    /* Der Pfeil selbst */
+    .hilfe-sidebar ul li a::after {
+        content: "›"; /* Das Pfeil-Zeichen */
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 22px;
+        font-weight: bold;
+        color: #999; /* Dezentes Grau */
+    }
+
+    /* Der aktive (ausgewählte) Menüpunkt bekommt einen weißen Pfeil */
+    .hilfe-sidebar ul li.active a::after {
+        color: #ffffff;
+    }
+}
+
+
+/* Abstand für das Login-Formular */
+#loginTitel, 
+#registrierenTitel {
+    scroll-margin-top: 10px; /* Abstand zum Sticky-Header am PC */
+}
+
+/* Handy-Anpassung */
+@media (max-width: 768px) {
+    #loginTitel, 
+    #registrierenTitel {
+        scroll-margin-top: 220px; /* Auf dem Handy ist der Header höher */
+    }
+}
+
+
+html {
+    overflow-y: scroll;
+}
+
+.promo-banner.banner-versteckt {
+    transform: translateY(-100%);
+    /* opacity: 0; <-- RAUS! Er soll nicht durchsichtig werden */
+    pointer-events: none;
+    /* Die Transition sorgt dafür, dass er weich fährt */
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }

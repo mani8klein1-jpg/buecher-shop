@@ -21,19 +21,19 @@
                 <div class="top-bar">
             <div class="top-inner">
                 <div class="top-links">
-                    <!-- NEU: Benutzer-Menü -->
+                    <!--  Benutzer-Menü -->
                     <div id="authBereich">
                         <a href="login.html" id="loginLink">Anmelden</a>
                         <a href="registrieren.html" id="registerLink">Registrieren</a>
                         
                         <div id="userMenu" class="user-dropdown-container" style="display: none;">
                             <a href="#" id="userName" onclick="toggleDropdown(event)">
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 2px;">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-        <circle cx="12" cy="7" r="4"></circle>
-    </svg>
-    <span id="userNameText">Benutzer</span> ▾
-</a>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 2px;">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <span id="userNameText">Benutzer</span> ▾
+                            </a>
                             <div id="userDropdown" class="user-dropdown">
                                 <a href="profil.html">👤 Mein Konto</a>
                                 <a href="bestellungen.html">📦 Meine Bestellungen</a>
@@ -44,7 +44,9 @@
                         </div>
                     </div>
                     <a href="hilfe.html">Hilfe</a>
-                </div>                
+                    <a href="impressum.html">Impressum</a>
+                </div> 
+                                               
             </div>
         </div>
 
@@ -66,7 +68,7 @@
 
             
             <a href="index.html" class="logo">
-                <img src="bilder/logo.png" alt="Casa do Livro Logo">
+                <img src="bilder/logo3.png" alt="Casa do Livro Logo">
             </a>
 
 
@@ -149,7 +151,7 @@
 
     <!-- MITTLERER BANNER (Goldgelb) -->
     <!-- BANNER: BÜCHER FÜR KALTE TAGE -->
-<section class="promo-banner">
+<section class="promo-banner" id="promoBanner">
     <div class="promo-content">
         <span class="promo-eyebrow">DEINE NÄCHSTE LIEBLINGSGESCHICHTE</span>
 
@@ -160,7 +162,7 @@
             und mach es dir mit einer guten Geschichte gemütlich.
         </p>
 
-        <button type="button" onclick="scrolleZuUeberschrift()">
+       <button type="button" onclick="handleJetztStoebern()" class="btn" style="background-color: var(--accent-color); color: var(--primary-color); border: none; padding: 14px 26px; border-radius: 4px; font-weight: 700; cursor: pointer;">
             Jetzt stöbern
         </button>
     </div>
@@ -173,10 +175,10 @@
 
     <!-- MAIN -->
     <main class="container">
-                <div class="shop-intro">
+       <div class="shop-intro">
             <h2 id="kategorieTitel">2026: Eine Welt im Umbruch</h2>
             <p id="kategorieUntertitel">Entdecken Sie unsere Auswahl an spannenden Geschichten</p>
-            <p id="suchErgebnisAnzahl" style="display: none; font-size: 14px; color: #888; margin-top: 5px;"></p>
+            <p id="suchErgebnisAnzahl" style="display: none; font-size: 14px; color: #888; margin-top: 0px;"></p>
         </div>
 
         <div class="produkt-grid" id="produktGrid">
@@ -189,7 +191,7 @@
 
     <!-- FOOTER -->
     <footer>
-        &copy; 2026 Casa do Livro - Alle Rechte vorbehalten
+        &copy; 2026 TOHFA'S - Alle Rechte vorbehalten
     </footer>
 
     <script src="js/api.js"></script>

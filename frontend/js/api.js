@@ -3,7 +3,8 @@
 // ========================================
 // Diese Datei kümmert sich um die Kommunikation
 // mit dem Backend.
-const API_BASE_URL = "https://casalivr.uber.space";
+//const API_BASE_URL = "https://casalivr.uber.space";
+const API_BASE_URL = "https://casalivr.uber.space/api";
 // ========================================
 // TOKEN-VERWALTUNG
 // ========================================

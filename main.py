@@ -64,11 +64,11 @@ def sende_bestaetigungs_email(empfaenger_email: str, kunden_name: str, bestellnu
     <body>
         <div class="container">
             <div class="header">
-                <h1>CASA DO <span>LIVRO</span></h1>
+                <h1>TOHFA'S</h1>
             </div>
             <div class="content">
                 <h2>Hallo {kunden_name},</h2>
-                <p>vielen Dank für deine Bestellung bei Casa do Livro! Wir haben deine Bestellung erhalten und bearbeiten sie umgehend.</p>
+                <p>vielen Dank für deine Bestellung bei TOHFA'S! Wir haben deine Bestellung erhalten und bearbeiten sie umgehend.</p>
                 
                 <div class="test-hint">
                     ⚠️ <strong>WICHTIG:</strong> Dies ist eine TEST-BESTELLUNG! Es handelt sich um ein Portfolio-Projekt. Es wurde kein echter Kauf getätigt und es wird kein Geld abgebucht.
@@ -90,10 +90,10 @@ def sende_bestaetigungs_email(empfaenger_email: str, kunden_name: str, bestellnu
                 <div class="total">Gesamt: {str(round(gesamtpreis, 2)).replace('.', ',')} €</div>
                 
                 <p style="margin-top: 30px;">Wir wünschen dir viel Freude mit deiner Bestellung!</p>
-                <p>Viele Grüße,<br>Dein Casa do Livro-Team</p>
+                <p>Viele Grüße,<br>Dein TOHFA'S-Team</p>
             </div>
             <div class="footer">
-                &copy; 2026 Casa do Livro - Alle Rechte vorbehalten
+                &copy; 2026 TOHFA'S - Alle Rechte vorbehalten
             </div>
         </div>
     </body>
@@ -107,9 +107,9 @@ def sende_bestaetigungs_email(empfaenger_email: str, kunden_name: str, bestellnu
         "content-type": "application/json"
     }
     payload = {
-        "sender": {"email": sender_email, "name": "Casa do Livro"},
+        "sender": {"email": sender_email, "name": "TOHFA'S"},
         "to": [{"email": empfaenger_email}],
-        "subject": f"Deine Bestellung bei Casa do Livro (#{bestellnummer})",
+        "subject": f"Deine Bestellung bei TOHFA'S (#{bestellnummer})",
         "htmlContent": body
     }
 
@@ -166,7 +166,7 @@ def sende_admin_benachrichtigung(kunden_email: str, kunden_name: str, bestellnum
     <body>
         <div class="container">
             <div class="header">
-                <h1>CASA DO <span>LIVRO</span> ADMIN</h1>
+                <h1>TOHFA'S ADMIN</h1>
             </div>
             <div class="content">
                 <h2>Neue Bestellung eingegangen! 🛒</h2>
@@ -201,7 +201,7 @@ def sende_admin_benachrichtigung(kunden_email: str, kunden_name: str, bestellnum
                 <p style="margin-top: 30px;">Bitte logge dich in den Admin-Bereich ein, um die Bestellung zu bearbeiten und zu versenden.</p>
             </div>
             <div class="footer">
-                &copy; 2026 Casa do Livro - Admin-System
+                &copy; 2026 TOHFA'S - Admin-System
             </div>
         </div>
     </body>
@@ -215,7 +215,7 @@ def sende_admin_benachrichtigung(kunden_email: str, kunden_name: str, bestellnum
         "content-type": "application/json"
     }
     payload = {
-        "sender": {"email": sender_email, "name": "Casa do Livro System"},
+        "sender": {"email": sender_email, "name": "TOHFA'S System"},
         "to": [{"email": admin_email}],
         "subject": f"NEUE BESTELLUNG #{bestellnummer} - {kunden_name}",
         "htmlContent": body

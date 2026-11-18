@@ -151,7 +151,6 @@ async function bearbeiteProdukt(id) {
         document.getElementById('bild_url').value = produkt.bild_url || '';
         document.getElementById('beschreibung').value = produkt.beschreibung || '';
         document.getElementById('kategorie').value = produkt.kategorie_id;
-        document.getElementById('originalpreis').value = produkt.originalpreis || '';
         document.getElementById('rabatt_prozent').value = produkt.rabatt_prozent || '';
 
         bearbeitungsModus = true;
